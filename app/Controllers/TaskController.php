@@ -2,11 +2,10 @@
 
 namespace App\Controllers;
 
-class Home extends BaseController
+class TaskController extends BaseController
 {
     public function index(): string
     {
-        return view('/Home/index.php');
+        return view('/Tasks/index.php');
     }
 }
-?>
