@@ -4,6 +4,10 @@ namespace Config;
 
 use CodeIgniter\Database\Config;
 
+if (!defined('MYSQLI_STORE_RESULT')) {
+    define('MYSQLI_STORE_RESULT', 0);
+}
+
 /**
  * Database Configuration
  */
@@ -27,9 +31,9 @@ class Database extends Config
     public array $default = [
         'DSN'          => '',
         'hostname'     => 'localhost',
-        'username'     => '',
-        'password'     => '',
-        'database'     => '',
+        'username'     => 'root',
+        'password'     => 'root',
+        'database'     => 'tecnicas_integrador_db',
         'DBDriver'     => 'MySQLi',
         'DBPrefix'     => '',
         'pConnect'     => false,

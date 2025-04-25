@@ -8,14 +8,16 @@ class TaskModel extends Model
 {
     protected $table = 'tasks';
     protected $primaryKey = 'id';
-
+    protected $returnType = 'array';
     protected $allowedFields = [
+        'id',
         'subject',
         'description',
         'priority',
         'state',
         'reminderDate',
         'expirationDate',
-        'color'
+        'color',
+        'idAutor'
     ];
 }

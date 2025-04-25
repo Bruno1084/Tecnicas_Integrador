@@ -8,7 +8,6 @@ class SubTaskModel extends Model
 {
     protected $table = 'subtasks';
     protected $primaryKey = 'id';
-
     protected $allowedFields = [
         'description',
         'priority',
