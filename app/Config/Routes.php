@@ -1,5 +1,6 @@
 <?php
 
+use App\Controllers\TaskController;
 use CodeIgniter\Router\RouteCollection;
 
 /**
@@ -15,11 +16,9 @@ $routes->put('/users/(:num)', 'UserController::update/$1');
 $routes->delete('/users/(:num)', 'UserController::delete/$1');
 
 //Task Routes
-$routes->get('/tasks', 'TaskController::index');
-$routes->get('/tasks/(:num)', 'TaskController::getOne/$1');
-$routes->post('/tasks', 'TaskController::create');
-$routes->put('/tasks/(:num)', 'TaskController::update/$1');
-$routes->delete('/tasks/(:num)', 'TaskController::delete/$1');
+$routes->get('/tasks', 'TaskController::index'); // Lista
+$routes->get('/tasks/(:num)', 'TaskController::getOne/$1'); // Detalle de tarea
+$routes->get('/tasks/(:num)/subtasks', 'SubTaskController::getAll/$1'); // Subtareas de una tarea
 
 //Subtask Routes
 $routes->get('/subtasks', 'SubTaskController::getAll');

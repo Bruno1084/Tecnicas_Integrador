@@ -2,10 +2,19 @@
 
 namespace App\Controllers;
 
+use App\Models\SubTaskModel;
+use App\Models\TaskModel;
+
 class SubTaskController extends BaseController
 {
-    public function index(): string
+    public function getAll($idTask)
     {
-        return view('Subtasks/index.php');
+        $subTaskModel = new SubTaskModel();
+        $taskModel = new TaskModel();
+    
+        $data['task'] = $taskModel->find($idTask);
+        $data['subTasks'] = $subTaskModel->where('id', $idTask)->findAll();
+    
+        return view('/Tasks/show', $data);
     }
 }

@@ -1,29 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
+<?= view('layout/header', ['title' => 'Inicio']) ?>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task View</title>
-</head>
+<main>
+    <h2>Task List</h2>
 
-<body>
-    <h1>Task View</h1>
-
-    <?php if (empty($tasks)): ?>
-        <p>No hay tareas disponibles.</p>
-    <?php else: ?>
-        <ul>
+    <section>
+        <?php if (empty($tasks)): ?>
+            <p>No hay tareas disponibles.</p>
+        <?php else: ?>
             <?php foreach ($tasks as $task): ?>
-                <li>
-                    <strong><?= esc($task['subject']) ?></strong><br>
-                    <?= esc($task['description']) ?><br>
-                    Estado: <?= esc($task['state']) ?><br>
-                    Prioridad: <?= esc($task['priority']) ?><br>
-                    Color: <?= esc($task['color']) ?><br>
-                </li>
+                <?= view('layout/TaskCard', [
+                    'id' => $task['id'],
+                    'subject' => $task['subject'],
+                    'description' => $task['description'],
+                    'priority' => $task['priority'],
+                    'state' => $task['state'],
+                    'reminderDate' => $task['reminderDate'],
+                    'expirationDate' => $task['expirationDate'],
+                    'color' => $task['color'],
+                ]) ?>
             <?php endforeach; ?>
-        </ul>
-    <?php endif; ?>
-</body>
-</html>
+        <?php endif; ?>
+    </section>
+
+</main>
+
+<?= view('layout/footer') ?>

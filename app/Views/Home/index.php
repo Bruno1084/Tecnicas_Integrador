@@ -1,16 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
+<?= view('layout/header', ['title' => 'Inicio']) ?>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Index Welcome</title>
-</head>
+<main>
+  <p>Bienvenido a la página de inicio.</p>
+</main>
 
-<body>
-    <header>Header</header>
-    <h1>index view</h1>
-    <h2>This should be the main page of my application.</h2>
-</body>
-
-</html>
+<?= view('layout/footer') ?>

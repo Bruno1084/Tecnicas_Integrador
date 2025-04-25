@@ -1,0 +1,12 @@
+.taskCard--container {
+    border: 1px solid black;
+    border-radius: 8px;
+    padding: 8px;
+    margin: 8px 0;
+}
+
+.taskCard--container a {
+    text-decoration: none;
+    color: #000;
+}
+
