@@ -6,7 +6,7 @@
     <title><?= $title ?? 'Task Manager' ?></title>
     <link rel="stylesheet" href="<?= base_url('css/header.css') ?>">
     <link rel="stylesheet" href="<?= base_url('css/taskCard.css') ?>">
-
+    <link rel="stylesheet" href="<?= base_url('css/subTaskCard.css') ?>">
 </head>
 
 <body>

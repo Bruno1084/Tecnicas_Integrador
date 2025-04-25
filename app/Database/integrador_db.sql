@@ -29,7 +29,7 @@ create table subtasks(
     description varchar(500) not null,
 	priority enum('alta', 'media', 'baja'),
     state enum('no iniciada', 'en proceso', 'completada') default 'no iniciada',
-    expirationDate Datetime not null,
+    reminderDate Datetime,
     comment varchar(500),
     idResponsible int,
     idTask int not null,

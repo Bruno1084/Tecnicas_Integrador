@@ -13,7 +13,7 @@ class SubTaskController extends BaseController
         $taskModel = new TaskModel();
     
         $data['task'] = $taskModel->find($idTask);
-        $data['subTasks'] = $subTaskModel->where('id', $idTask)->findAll();
+        $data['subTasks'] = $subTaskModel->where('idTask', $idTask)->findAll();
     
         return view('/Tasks/show', $data);
     }
