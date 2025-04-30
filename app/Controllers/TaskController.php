@@ -10,16 +10,9 @@ class TaskController extends BaseController
     {
         $taskModel = new TaskModel();
         $data['tasks'] = $taskModel->findAll();
-        
+
         return view('/Tasks/index', $data);
     }
-
-    // public function getAll() {
-    //     $taskModel = new TaskModel();
-    //     $tasks = $taskModel->findAll();
-
-    //     return $this->response->setJSON($tasks);
-    // }
 
     public function getOne($id)
     {

@@ -10,7 +10,6 @@ class TaskModel extends Model
     protected $primaryKey = 'id';
     protected $returnType = 'array';
     protected $allowedFields = [
-        'id',
         'subject',
         'description',
         'priority',
@@ -18,6 +17,5 @@ class TaskModel extends Model
         'reminderDate',
         'expirationDate',
         'color',
-        'idAutor'
     ];
 }

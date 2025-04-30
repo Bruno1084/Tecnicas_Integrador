@@ -8,13 +8,13 @@ class SubTaskModel extends Model
 {
     protected $table = 'subtasks';
     protected $primaryKey = 'id';
+    protected $returnType = 'array';
     protected $allowedFields = [
         'description',
         'priority',
         'state',
-        'expirationDate',
+        'reminderDate',
         'comment',
         'idResponsible',
-        'idTask'
     ];
 }
