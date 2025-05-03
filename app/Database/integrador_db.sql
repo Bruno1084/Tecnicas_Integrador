@@ -2,8 +2,8 @@ use tecnicas_integrador_db;
 create table users(
 	id int not null auto_increment,
     name varchar(200) not null,
-    nickname varchar(200) not null,
-    email varchar(200) not null,
+    nickname varchar(200) not null unique,
+    email varchar(200) not null unique,
     password varchar(200) not null,
     active boolean not null,
     primary key(id)

@@ -1,12 +1,14 @@
 <?php
 
-use App\Controllers\TaskController;
 use CodeIgniter\Router\RouteCollection;
 
 /**
  * @var RouteCollection $routes
  */
-$routes->get('/', 'Home::index');
+//Auth Routes
+$routes->get('/login', 'Auth::login');
+$routes->post('/login', 'Auth::loginPost');
+
 
 //User Routes
 $routes->get('/users', 'UserController::getAll');
