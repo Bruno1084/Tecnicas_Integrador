@@ -39,4 +39,8 @@ class Auth extends BaseController
         session()->destroy();
         return redirect()->to('/login');
     }
+
+    public function signUp() {
+        return view('auth/signUp.php');
+    }
 }

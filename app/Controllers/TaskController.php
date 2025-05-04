@@ -8,8 +8,11 @@ class TaskController extends BaseController
 {
     public function index(): string
     {
+        $session = session();
+        $userId = $session->get('userId');
+
         $taskModel = new TaskModel();
-        $data['tasks'] = $taskModel->findAll();
+        $data['tasks'] = $taskModel->where("idAutor", $userId)->findAll();
 
         return view('/Tasks/index', $data);
     }
