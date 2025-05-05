@@ -40,7 +40,27 @@ class Auth extends BaseController
         return redirect()->to('/login');
     }
 
-    public function signUp() {
+    public function signUp()
+    {
         return view('auth/signUp.php');
+    }
+
+    public function signUpPost()
+    {
+        $model = new UserModel();
+
+        $data = [
+            'name' => $this->request->getPost('name'),
+            'nickname' => $this->request->getPost('nickname'),
+            'email' => $this->request->getPost('email'),
+            'password' => $this->request->getPost('password'),
+            'active' => true,
+        ];
+
+        if (!$model->insert($data)) {
+            print_r($model->errors());
+        } else {
+            return redirect()->to('/login');
+        }
     }
 }

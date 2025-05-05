@@ -7,9 +7,10 @@ use CodeIgniter\Router\RouteCollection;
  */
 //Auth Routes
 $routes->get('/', 'Auth::login');
-$routes->get('/login', 'Auth::login');
-$routes->post('/login', 'Auth::loginPost');
-$routes->get('/signUp', 'Auth::signUp');
+$routes->get('/log_in', 'Auth::login');
+$routes->post('/log_in', 'Auth::loginPost');
+$routes->get('/sign_up', 'Auth::signUp');
+$routes->post('/sign_up', 'Auth::signUpPost');
 
 //User Routes
 $routes->get('/users', 'UserController::getAll');
@@ -20,7 +21,8 @@ $routes->delete('/users/(:num)', 'UserController::delete/$1');
 
 //Task Routes
 $routes->get('/tasks', 'TaskController::index'); // Lista
-$routes->get('/tasks/(:num)', 'TaskController::getOne/$1'); // Detalle de tarea
+$routes->post('/tasks', 'TaskController::create');
+$routes->get('/new_task', 'TaskController::newTask');
 $routes->get('/tasks/(:num)/subtasks', 'SubTaskController::getAll/$1'); // Subtareas de una tarea
 
 //Subtask Routes

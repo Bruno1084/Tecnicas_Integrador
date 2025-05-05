@@ -17,6 +17,10 @@ class TaskController extends BaseController
         return view('/Tasks/index', $data);
     }
 
+    public function newTask() {
+        return view('Tasks/new_task');
+    }
+
     public function getOne($id)
     {
         $taskModel = new TaskModel();
@@ -32,22 +36,26 @@ class TaskController extends BaseController
     public function create()
     {
         $taskModel = new TaskModel();
-        $data = $this->request->getJSON(true);
+        $session = session();
+
+        $idAutor = $session->get('userId');    
+
+        $data = [
+            'subject' => $this->request->getPost('subject'),
+            'description' => $this->request->getPost('description'),
+            'priority' => $this->request->getPost('priority'),
+            'state' => $this->request->getPost('state'),
+            'reminderDate' => $this->request->getPost('reminderDate'),
+            'expitarionDate' => $this->request->getPost('expirationDate'),
+            'color' => $this->request->getPost('color'),
+            'idAutor' => $idAutor,
+        ];
 
         if (!$taskModel->insert($data)) {
-            return $this->response->setStatusCode(400)->setJSON([
-                'status' => 'error',
-                'message' => 'It was not posible to create the task',
-                'errors' => $taskModel->errors()
-            ]);
+            print_r($taskModel->errors());
+        } else {
+            return redirect()->to('/tasks');
         }
-
-        //Returns a 201 code and the created user Data
-        return $this->response->setStatusCode(201)->setJSON([
-            'status' => 'success',
-            'message' => 'Task created successfully',
-            'data' => $data
-        ]);
     }
 
     public function update($id)

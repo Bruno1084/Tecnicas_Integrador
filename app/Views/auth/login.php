@@ -16,7 +16,7 @@
     <main>
         <div id="login--container">
 
-            <form action="/login" method="post">
+            <form action="/log_in" method="post">
                 <div class="login-header--container login-box">
                     <h3 class="login-header">Login</h3>
                 </div>
@@ -35,7 +35,7 @@
                 </div>
             </form>
             <div>
-                <a href="<?= site_url('signUp') ?>">Sign Up</a>
+                <a href="<?= site_url('sign_up') ?>">Sign Up</a>
             </div>
         </div>
 

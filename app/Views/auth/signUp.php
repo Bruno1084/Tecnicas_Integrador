@@ -11,7 +11,7 @@
 <body>
 
     <main>
-        <form action="/signUp" method="post" id="signUp--container">
+        <form action="/sign_up" method="post" id="signUp--container">
             <div class="signUp-header--container signUp-box">
                 <h3 class="signUp-header">Sign Up</h3>
             </div>

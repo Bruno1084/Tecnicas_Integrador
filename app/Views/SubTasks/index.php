@@ -1,11 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Subtask View</title>
-</head>
-<body>
-    <h1>Subtask View</h1>
-</body>
-</html>
+<?= view('layout/header', ['title' => 'Show Task']) ?>
+<h2>Task Detail</h2>
+
+<main>
+    <section>
+        <h3>Subtareas</h3>
+        <?= view('layout/TaskCard', [
+            'id' => $task['id'],
+            'subject' => $task['subject'],
+            'description' => $task['description'],
+            'priority' => $task['priority'],
+            'state' => $task['state'],
+            'reminderDate' => $task['reminderDate'],
+            'expirationDate' => $task['expirationDate'],
+            'color' => $task['color'],
+        ]) ?>
+    </section>
+    <section>
+        <h2>Subtask List</h2>
+        <?php if (empty($subTasks)): ?>
+            <p>No hay subtareas disponibles.</p>
+        <?php else: ?>
+            <?php foreach ($subTasks as $subtask): ?>
+                <?= view('layout/SubTaskCard', [
+                    'id' => $subtask['id'],
+                    'description' => $subtask['description'],
+                    'priority' => $subtask['priority'],
+                    'state' => $subtask['state'],
+                    'reminderDate' => $subtask['reminderDate'],
+                    'comment' => $subtask['comment'],
+                ]) ?>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </section>
+</main>
+
+
+<?= view('layout/footer') ?>

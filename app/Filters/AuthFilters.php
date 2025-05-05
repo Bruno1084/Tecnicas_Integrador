@@ -14,10 +14,10 @@ class AuthFilters implements FilterInterface
         $segments = explode('/', $request->getUri()->getPath());
         $lastSegment = end($segments);
 
-        $publicRoutes = ['login', 'signUp', '/'];
+        $publicRoutes = ['log_in', 'sign_up', '/'];
         
         if (! $session->get('loggedIn') && !in_array($lastSegment, $publicRoutes)) {
-            return redirect()->to('/login');
+            return redirect()->to('/log_in');
         }
     }
 

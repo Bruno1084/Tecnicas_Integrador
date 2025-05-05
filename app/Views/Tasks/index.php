@@ -2,7 +2,7 @@
 
 <main>
     <h2>Task List</h2>
-
+    <a href="<?= site_url('new_task') ?>">Create Task</a>
 
     <section>
         <?php if (empty($tasks)): ?>
