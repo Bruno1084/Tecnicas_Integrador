@@ -1,4 +1,7 @@
-<?= view('layout/header', ['title' => 'Inicio']) ?>
+<?= view('layout/header', ['styles' => [
+    'header.css',
+    'taskCard.css',
+]]) ?>
 
 <main>
     <h2>Task List</h2>

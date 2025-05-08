@@ -3,10 +3,11 @@
 
 <head>
     <meta charset="UTF-8">
-    <title><?= $title ?? 'Task Manager' ?></title>
-    <link rel="stylesheet" href="<?= base_url('css/header.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('css/taskCard.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('css/subTaskCard.css') ?>">
+    <title>Task Manager</title>
+
+    <?php foreach($styles ?? [] as $style): ?>
+        <link rel="stylesheet" href="<?= base_url("css/" . $style) ?>">
+    <?php endforeach; ?>
 </head>
 
 <body>
