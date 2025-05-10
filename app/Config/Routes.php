@@ -20,7 +20,7 @@ $routes->put('/users/(:num)', 'UserController::update/$1');
 $routes->delete('/users/(:num)', 'UserController::delete/$1');
 
 //Task Routes
-$routes->get('/tasks', 'TaskController::index'); // Lista
+$routes->get('/tasks', 'TaskController::getAll'); // Lista
 $routes->post('/tasks', 'TaskController::create');
 $routes->get('/new_task', 'TaskController::newTask');
 $routes->get('/tasks/(:num)/subtasks', 'SubTaskController::getAll/$1'); // Subtareas de una tarea

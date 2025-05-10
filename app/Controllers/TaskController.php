@@ -6,19 +6,22 @@ use App\Models\TaskModel;
 
 class TaskController extends BaseController
 {
-    public function index(): string
+    public function getAll(): string
     {
         $session = session();
         $userId = $session->get('userId');
 
+        $filters = [
+            'userId' => $userId,
+            'name' => $this->request->getGet('name'),
+            'priority' => $this->request->getGet('priority'),
+        ];
+
         $taskModel = new TaskModel();
         $data['tasks'] = $taskModel->where("idAutor", $userId)->findAll();
+        $data['tasks'] = $this->getFiltered($filters);
 
         return view('/Tasks/index', $data);
-    }
-
-    public function newTask() {
-        return view('Tasks/new_task');
     }
 
     public function getOne($id)
@@ -33,12 +36,36 @@ class TaskController extends BaseController
         return $this->response->setJSON($task);
     }
 
+    public function getFiltered($filters = [])
+    {
+        $taskModel = new TaskModel();
+
+        $taskModel->where('idAutor', $filters['userId']);
+
+        if (!empty($filters['name'])) {
+            $taskModel->like('name', $filters['name']);
+        }
+
+        if (!empty($filters['priority'])) {
+            $taskModel->where('priority', $filters['priority']);
+        }
+
+        return $taskModel->findAll();
+    }
+
+    public function newTask()
+    {
+        return view('Tasks/new_task');
+    }
+
+
+
     public function create()
     {
         $taskModel = new TaskModel();
         $session = session();
 
-        $idAutor = $session->get('userId');    
+        $idAutor = $session->get('userId');
 
         $data = [
             'subject' => $this->request->getPost('subject'),

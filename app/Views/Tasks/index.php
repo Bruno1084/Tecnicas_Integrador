@@ -7,6 +7,8 @@
     <h2>Task List</h2>
     <a href="<?= site_url('new_task') ?>">Create Task</a>
 
+    <?= view('layout/TaskFilter') ?>
+
     <section>
         <?php if (empty($tasks)): ?>
             <p>No hay tareas disponibles.</p>
