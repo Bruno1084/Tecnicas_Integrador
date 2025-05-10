@@ -7,6 +7,7 @@
             <option value="media">Media</option>
             <option value="baja">Baja</option>
         </select>
+        <input type="date" name="expirationDate" id="expirationDate">
         <button type="submit">Filter</button>
     </form>
 </div>

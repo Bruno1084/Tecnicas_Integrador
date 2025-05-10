@@ -15,6 +15,7 @@ class TaskController extends BaseController
             'userId' => $userId,
             'name' => $this->request->getGet('name'),
             'priority' => $this->request->getGet('priority'),
+            'expirationDate' => $this->request->getGet('expirationDate'),
         ];
 
         $taskModel = new TaskModel();
@@ -44,10 +45,10 @@ class TaskController extends BaseController
 
         if (!empty($filters['name'])) {
             $taskModel->like('name', $filters['name']);
-        }
-
-        if (!empty($filters['priority'])) {
+        } elseif (!empty($filters['priority'])) {
             $taskModel->where('priority', $filters['priority']);
+        } elseif (!empty($filters['expirationDate'])) {
+            $taskModel->where('expirationDate', $filters['expirationDate']);
         }
 
         return $taskModel->findAll();
@@ -57,8 +58,6 @@ class TaskController extends BaseController
     {
         return view('Tasks/new_task');
     }
-
-
 
     public function create()
     {

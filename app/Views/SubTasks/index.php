@@ -25,7 +25,8 @@
             <p>No hay subtareas disponibles.</p>
         <?php else: ?>
             <?php foreach ($subTasks as $subtask): ?>
-                <?= view('layout/SubTaskCard', [
+                 <?= view('layout/SubTaskCard', [
+                    'responsible' => $responsible['nickname'],
                     'id' => $subtask['id'],
                     'description' => $subtask['description'],
                     'priority' => $subtask['priority'],
