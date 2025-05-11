@@ -15,6 +15,7 @@ $routes->get('/log_out', 'Auth::logout');
 
 //User Routes
 $routes->get('/users/(:segment)', 'UserController::getOne/$1');
+$routes->post('/users', 'UserController::update');
 
 //Task Routes
 $routes->get('/tasks', 'TaskController::getAll'); // Lista
