@@ -25,6 +25,7 @@ class Auth extends BaseController
             $session->set([
                 'userId' => $user['id'],
                 'userEmail' => $user['email'],
+                'userNickname' =>$user['nickname'],
                 'loggedIn' => true
             ]);
             return redirect()->to('/tasks');
@@ -37,7 +38,7 @@ class Auth extends BaseController
     public function logout()
     {
         session()->destroy();
-        return redirect()->to('/login');
+        return redirect()->to('/log_in');
     }
 
     public function signUp()

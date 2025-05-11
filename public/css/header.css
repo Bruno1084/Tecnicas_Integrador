@@ -11,3 +11,14 @@ header {
     align-items: center;
     padding: 12px;
 }
+
+.headerNav--container nav a {
+    margin: 0 5px;
+    text-decoration: none;
+    color: black;
+}
+
+.headerNav--container nav a:hover {
+    color: blue;
+    text-decoration: underline;
+}

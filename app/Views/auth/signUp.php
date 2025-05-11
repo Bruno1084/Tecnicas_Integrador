@@ -11,32 +11,37 @@
 <body>
 
     <main>
-        <form action="/sign_up" method="post" id="signUp--container">
-            <div class="signUp-header--container signUp-box">
-                <h3 class="signUp-header">Sign Up</h3>
+        <div id="signUp--container">
+            <form action="/sign_up" method="post">
+                <div class="signUp-header--container signUp-box">
+                    <h3 class="signUp-header">Sign Up</h3>
+                </div>
+                <div class="signUp-body--container">
+                    <div class="signUp-name--container signUp-box">
+                        <p>Name</p>
+                        <input type="text" name="name" id="name">
+                    </div>
+                    <div class="signUp-nickname--container signUp-box">
+                        <p>Nickname</p>
+                        <input type="text" name="nickname" id="nickname">
+                    </div>
+                    <div class="signUp-email--container signUp-box">
+                        <p>Email</p>
+                        <input type="text" name="email" id="email">
+                    </div>
+                    <div class="signUp-password--container signUp-box">
+                        <p>Password</p>
+                        <input type="text" name="password" id="password">
+                    </div>
+                    <div class="signUp-button--container signUp-box">
+                        <input type="submit" value="Submit">
+                    </div>
+                </div>
+            </form>
+            <div>
+                <a href="<?= site_url('log_in') ?>">Log In</a>
             </div>
-            <div class="signUp-body--container">
-                <div class="signUp-name--container signUp-box">
-                    <p>Name</p>
-                    <input type="text" name="name" id="name">
-                </div>
-                <div class="signUp-nickname--container signUp-box">
-                    <p>Nickname</p>
-                    <input type="text" name="nickname" id="nickname">
-                </div>
-                <div class="signUp-email--container signUp-box">
-                    <p>Email</p>
-                    <input type="text" name="email" id="email">
-                </div>
-                <div class="signUp-password--container signUp-box">
-                    <p>Password</p>
-                    <input type="text" name="password" id="password">
-                </div>
-                <div class="signUp-button--container signUp-box">
-                    <input type="submit" value="Submit">
-                </div>
-            </div>
-        </form>
+        </div>
     </main>
 </body>
 
