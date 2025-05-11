@@ -6,6 +6,20 @@ use App\Models\TaskModel;
 
 class TaskController extends BaseController
 {
+    public function completedTasks() {
+        $session = session();
+        $userId = $session->get('userId');
+
+        $filters = [
+            'userId' => $userId,
+            'state' => $this->request->getGet('state')
+        ];
+
+        $data['completedTasks'] = $this->getFiltered($filters);
+
+        return view('Tasks/completed_tasks');
+    }
+
     public function getAll(): string
     {
         $session = session();
@@ -19,7 +33,7 @@ class TaskController extends BaseController
         ];
 
         $taskModel = new TaskModel();
-        $data['tasks'] = $taskModel->where("idAutor", $userId)->findAll();
+        // $data['tasks'] = $taskModel->where("idAutor", $userId)->findAll();
         $data['tasks'] = $this->getFiltered($filters);
 
         return view('/Tasks/index', $data);
@@ -45,6 +59,8 @@ class TaskController extends BaseController
 
         if (!empty($filters['name'])) {
             $taskModel->like('name', $filters['name']);
+        } elseif (!empty($filters['state'])) {
+            $taskModel->where('state', $filters['state']);
         } elseif (!empty($filters['priority'])) {
             $taskModel->where('priority', $filters['priority']);
         } elseif (!empty($filters['expirationDate'])) {

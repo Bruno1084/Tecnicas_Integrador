@@ -3,18 +3,16 @@
     'taskCard.css',
 ]]) ?>
 
-<main>
-    <h2>Task List</h2>
-    <a href="<?= site_url('new_task') ?>">Create Task</a>
-    <a href="<?= site_url('completed_tasks') ?>">Completed Tasks</a>
+<body>
+    <h2>Completed Tasks</h2>
 
     <?= view('layout/TaskFilter') ?>
 
     <section>
-        <?php if (empty($tasks)): ?>
-            <p>No hay tareas disponibles.</p>
+        <?php if (empty($completedTasks)): ?>
+            <p>No hay tareas completadas disponibles.</p>
         <?php else: ?>
-            <?php foreach ($tasks as $task): ?>
+            <?php foreach ($completedTasks as $task): ?>
                 <?= view('layout/TaskCard', [
                     'id' => $task['id'],
                     'subject' => $task['subject'],
@@ -28,7 +26,6 @@
             <?php endforeach; ?>
         <?php endif; ?>
     </section>
-
-</main>
+</body>
 
 <?= view('layout/footer') ?>

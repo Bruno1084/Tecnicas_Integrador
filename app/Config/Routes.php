@@ -20,6 +20,7 @@ $routes->get('/users/(:segment)', 'UserController::getOne/$1');
 $routes->get('/tasks', 'TaskController::getAll'); // Lista
 $routes->post('/tasks', 'TaskController::create');
 $routes->get('/new_task', 'TaskController::newTask');
+$routes->get('/completed_tasks', 'TaskController::completedTasks');
 
 //Subtask Routes
 $routes->get('/tasks/(:num)/subtasks', 'SubTaskController::getAll/$1'); // Subtareas de una tarea
