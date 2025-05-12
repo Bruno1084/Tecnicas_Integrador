@@ -1,0 +1,21 @@
+.taskCardPreview--container {
+    padding: 15px;
+    margin: 12px 20px;
+    max-width: 680px;
+    width: 100%;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    background-color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    color: black;
+}
+
+.taskCardPreview-header--container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.taskCardPreview-header-left {
+    display: flex;
+}

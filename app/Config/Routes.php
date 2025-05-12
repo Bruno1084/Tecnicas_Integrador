@@ -14,17 +14,19 @@ $routes->post('/sign_up', 'Auth::signUpPost');
 $routes->get('/log_out', 'Auth::logout');
 
 //User Routes
-$routes->get('/users/(:segment)', 'UserController::getOne/$1');
+$routes->get('/users/(:segment)', 'UserController::getOneByNickname/$1');
 $routes->post('/users', 'UserController::update');
 
 //Task Routes
-$routes->get('/tasks', 'TaskController::getAll'); // Lista
+$routes->get('/tasks', 'TaskController::getAll');
 $routes->post('/tasks', 'TaskController::create');
 $routes->get('/new_task', 'TaskController::newTask');
 $routes->get('/completed_tasks', 'TaskController::completedTasks');
 
 //Subtask Routes
-$routes->get('/tasks/(:num)/subtasks', 'SubTaskController::getAll/$1'); // Subtareas de una tarea
+$routes->get('/tasks/(:num)/subtasks', 'SubTaskController::getAll/$1');
+$routes->get('/tasks/(:num)/subtasks/(:num)', 'SubtaskController::getOne/$1');
+
 $routes->get('/subtasks/(:num)', 'SubTaskController::getOne/$1');
 $routes->post('/subtasks', 'SubTaskController::create');
 $routes->put('/subtasks/(:num)', 'SubTaskController::update/$1');

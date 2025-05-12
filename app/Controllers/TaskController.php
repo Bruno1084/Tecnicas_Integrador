@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\TaskModel;
+use App\Models\UserModel;
 
 class TaskController extends BaseController
 {
@@ -25,6 +26,9 @@ class TaskController extends BaseController
         $session = session();
         $userId = $session->get('userId');
 
+        $userModel = new UserModel();
+        $user = $userModel->where('id', $userId)->first();
+
         $filters = [
             'userId' => $userId,
             'name' => $this->request->getGet('name'),
@@ -32,9 +36,8 @@ class TaskController extends BaseController
             'expirationDate' => $this->request->getGet('expirationDate'),
         ];
 
-        $taskModel = new TaskModel();
-        // $data['tasks'] = $taskModel->where("idAutor", $userId)->findAll();
         $data['tasks'] = $this->getFiltered($filters);
+        $data['userNickname'] = $user['nickname'];
 
         return view('/Tasks/index', $data);
     }

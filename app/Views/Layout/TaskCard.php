@@ -1,4 +1,4 @@
-<div class="taskCard--container" id="<?= $id ?>">
+<div class="taskCard--container">
     <a href="<?= base_url('tasks/'. $id .'/subtasks')?>">
         <p><strong>Subject:</strong> <?= $subject ?></p>
         <p><strong>Description:</strong> <?= $description ?></p>

@@ -1,41 +1,61 @@
 <?= view('layout/header', ['styles' => [
     'header.css',
-    'subTaskCard.css',
     'taskCard.css',
+    'subTaskCardPreview.css',
 ]]) ?>
 <h2>Task Detail</h2>
 
-<main>
-    <section>
-        <h3>Subtareas</h3>
-        <?= view('layout/TaskCard', [
-            'id' => $task['id'],
-            'subject' => $task['subject'],
-            'description' => $task['description'],
-            'priority' => $task['priority'],
-            'state' => $task['state'],
-            'reminderDate' => $task['reminderDate'],
-            'expirationDate' => $task['expirationDate'],
-            'color' => $task['color'],
-        ]) ?>
-    </section>
-    <section>
-        <h2>Subtask List</h2>
-        <?php if (empty($subTasks)): ?>
-            <p>No hay subtareas disponibles.</p>
-        <?php else: ?>
-            <?php foreach ($subTasks as $subtask): ?>
-                 <?= view('layout/SubTaskCard', [
-                    'responsible' => $responsible['nickname'],
-                    'id' => $subtask['id'],
-                    'description' => $subtask['description'],
-                    'priority' => $subtask['priority'],
-                    'state' => $subtask['state'],
-                    'reminderDate' => $subtask['reminderDate'],
-                    'comment' => $subtask['comment'],
-                ]) ?>
-            <?php endforeach; ?>
-        <?php endif; ?>
+<main class="taskCard-main">
+    <section class="taskCard--container">
+        <div class="taskCard-task-col taskCard-col1">
+            <div class="taskCard-task-header">
+                <p><strong>Task Card</strong></p>
+            </div>
+            <div class="taskCard-task-body">
+                <p><strong>Task Description</strong></p>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate eveniet ab commodi cumque earum, eos fugiat totam quos illum sequi quam laudantium ut deserunt aliquam delectus harum fugit dolorum corporis.</p>
+            </div>
+
+            <!-- SubtasksCard preview list -->
+            <div class="taskCard-subtaskList">
+                <?php if (empty($subTasks)): ?>
+                    <p>No hay subtareas disponibles.</p>
+                <?php else: ?>
+                    <?php foreach ($subTasks as $subtask): ?>
+                        <?= view('layout/SubTaskCardPreview', [
+                            'idTask' => $task['id'],
+                            'idSubTask' => $subtask['id'],
+                            'nickname' => $responsible['nickname'],
+                            'priority' => $subtask['priority'],
+                            'description' => $subtask['description'],
+                            'comment' => $subtask['comment'],
+                        ]) ?>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
+        </div>
+
+        <div class="taskCard-task-col taskCard-col2">
+            <div>
+                <p><strong>Color</strong></p>
+            </div>
+            <div>
+                <p><strong>State</strong></p>
+                <p>En Proceso</p>
+            </div>
+            <div>
+                <p><strong>Priority</strong></p>
+                <p>Alta</p>
+            </div>
+            <div>
+                <p><strong>Expiration Date</strong></p>
+                <p>date</p>
+            </div>
+            <div>
+                <p><strong>Reminder Date</strong></p>
+                <p>date</p>
+            </div>
+        </div>
     </section>
 </main>
 

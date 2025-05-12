@@ -7,7 +7,7 @@ use ReflectionException;
 
 class UserController extends BaseController
 {
-    public function getOne($nickname)
+    public function getOneByNickname($nickname)
     {
         $session = session();
         $userModel = new UserModel();
@@ -16,6 +16,23 @@ class UserController extends BaseController
 
         if ($currentUser && $currentUser['nickname'] == $nickname) {
             return view('Users/index', ['user' => $currentUser]);
+        }
+
+        //There is an error with the user
+        return redirect()->to('/log_out');
+    }
+
+    //This method is meant to be used to return the current logged user
+    public function getOneById()
+    {
+        $session = session();
+        $userId = $session->get('userId');
+        $userModel = new UserModel();
+
+        $currentUser = $userModel->where('id', $userId)->first();
+
+        if ($currentUser && $currentUser['id'] == $userId) {
+            return $currentUser;
         }
 
         //There is an error with the user

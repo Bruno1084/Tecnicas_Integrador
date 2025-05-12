@@ -21,4 +21,8 @@ class SubTaskController extends BaseController
         $data['responsible'] = $userModel->where('id', $session->get('userId'))->first();
         return view('/SubTasks/index', $data);
     }
+
+    public function getOne($idSubTask) {
+        
+    }
 }

@@ -1,0 +1,5 @@
+.taskList--container {
+    border: 1px solid black;
+    display: grid;
+    justify-items: center;
+}

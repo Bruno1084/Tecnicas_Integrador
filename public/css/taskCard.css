@@ -1,12 +1,31 @@
+.taskCard-main {
+    display: flex;
+    justify-content: center;
+
+}
+
 .taskCard--container {
-    border: 1px solid black;
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     border-radius: 8px;
-    padding: 8px;
-    margin: 8px 0;
+    padding: 15px;
+    margin: 15px 30px;
+    width: 100%;
+    max-width: 860px;
+    display: grid;
+    grid-template-columns: 70% 20%;
 }
 
-.taskCard--container a {
-    text-decoration: none;
-    color: #000;
+.taskCard-task-header {
+    margin-bottom: 8px;
 }
 
+.taskCard-col2 div {
+    margin-bottom: 8px;
+    margin-left: 8px;
+}
+
+.taskCard-subtaskList {
+    border: 1px solid black;
+    margin: 10px 0px;
+}
