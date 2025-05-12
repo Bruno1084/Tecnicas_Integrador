@@ -1,7 +1,35 @@
-.subTaskCard--container {
-    border: 1px solid black;
-    border-radius: 8px;
-    padding: 8px;
-    margin: 8px 0;
+.subTaskCard-main {
+    display: flex;
+    justify-content: center;
+
 }
 
+.subTaskCard--container {
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 15px 30px;
+    width: 100%;
+    max-width: 860px;
+    display: grid;
+    grid-template-columns: 70% 20%;
+}
+
+.subTaskCard-task-header {
+    margin-bottom: 8px;
+}
+
+.subTaskCard-col2 div {
+    margin-bottom: 8px;
+    margin-left: 8px;
+}
+
+.subTaskCard-subtaskList {
+    border: 1px solid black;
+    margin: 10px 0px;
+}
+
+.subTaskCard-task-description, .subTaskCard-task-commentary {
+    margin-bottom: 8px;
+}

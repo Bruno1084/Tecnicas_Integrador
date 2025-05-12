@@ -26,10 +26,12 @@ create table tasks(
 
 create table subtasks(
 	id int not null auto_increment,
+    subject varchar(200) not null,
     description varchar(500) not null,
 	priority enum('alta', 'media', 'baja'),
     state enum('no iniciada', 'en proceso', 'completada') default 'no iniciada',
     reminderDate Date,
+    expirationDate Date,
     comment varchar(500),
     idResponsible int,
     idTask int not null,

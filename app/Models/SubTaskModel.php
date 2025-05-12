@@ -10,6 +10,7 @@ class SubTaskModel extends Model
     protected $primaryKey = 'id';
     protected $returnType = 'array';
     protected $allowedFields = [
+        'subject',
         'description',
         'priority',
         'state',

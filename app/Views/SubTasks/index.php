@@ -3,7 +3,6 @@
     'taskCard.css',
     'subTaskCardPreview.css',
 ]]) ?>
-<h2>Task Detail</h2>
 
 <main class="taskCard-main">
     <section class="taskCard--container">
@@ -27,8 +26,8 @@
                             'idSubTask' => $subtask['id'],
                             'nickname' => $responsible['nickname'],
                             'priority' => $subtask['priority'],
+                            'subject' => $subtask['subject'],
                             'description' => $subtask['description'],
-                            'comment' => $subtask['comment'],
                         ]) ?>
                     <?php endforeach; ?>
                 <?php endif; ?>
@@ -55,9 +54,12 @@
                 <p><strong>Reminder Date</strong></p>
                 <p>date</p>
             </div>
+            <div>
+                <button>New Subtask</button>
+                <button>Edit Task</button>
+            </div>
         </div>
     </section>
 </main>
-
 
 <?= view('layout/footer') ?>

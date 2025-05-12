@@ -23,6 +23,9 @@ class SubTaskController extends BaseController
     }
 
     public function getOne($idSubTask) {
-        
+        $subTaskModel = new SubTaskModel();
+        $data['subTask'] = $subTaskModel->where('id', $idSubTask)->first();
+
+        return view('/SubTasks/subtask', $data);
     }
 }

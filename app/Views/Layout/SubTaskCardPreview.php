@@ -9,7 +9,7 @@
         </div>
     </div>
     <div class="subTaskCardPreview-body--container">
+        <p><?= $subject ?></p>        
         <p><?= $description ?></p>
-        <p><?= $comment ?></p>
     </div>
 </a>
