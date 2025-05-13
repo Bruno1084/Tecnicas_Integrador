@@ -19,3 +19,9 @@
 .taskCardPreview-header-left {
     display: flex;
 }
+
+.taskCardPreview-header-left img {
+    width: 22px;
+    height: 22px;
+    margin-right: 5px;
+}

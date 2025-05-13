@@ -15,7 +15,6 @@
                 </div>
 
             </div>
-            <!-- SubtasksCard preview list -->
         </div>
 
         <div class="subTaskCard-task-col subTaskCard-col2">
