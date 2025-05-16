@@ -16,7 +16,6 @@ class TaskModel extends Model
         'state',
         'reminderDate',
         'expirationDate',
-        'color',
         'idAutor',
     ];
 }

@@ -4,10 +4,14 @@ namespace App\Controllers;
 
 use App\Models\TaskModel;
 use App\Models\UserModel;
+use App\Types\Task;
+use DateTime;
+use InvalidArgumentException;
 
 class TaskController extends BaseController
 {
-    public function completedTasks() {
+    public function completedTasks()
+    {
         $session = session();
         $userId = $session->get('userId');
 
@@ -82,25 +86,44 @@ class TaskController extends BaseController
     {
         $taskModel = new TaskModel();
         $session = session();
-
         $idAutor = $session->get('userId');
 
+        // Pasar fechas del formulario a Datetime
+        $expirationDate = new DateTime($this->request->getPost('expirationDate'));
+        $reminderDate = $this->request->getPost('reminderDate')
+            ? new DateTime($this->request->getPost('reminderDate'))
+            : null;
+
+        try {
+            $task = new Task(
+                0,
+                $this->request->getPost('subject'),
+                $this->request->getPost('description'),
+                $this->request->getPost('priority'),
+                'no iniciada',
+                $expirationDate,
+                $reminderDate,
+                $idAutor
+            );
+        } catch (InvalidArgumentException $e) {
+            // Hay un error con los inputs. Devolver errores de Type Task
+            return redirect()->back()->withInput()->with('error', $e->getMessage());
+        }
+
         $data = [
-            'subject' => $this->request->getPost('subject'),
-            'description' => $this->request->getPost('description'),
-            'priority' => $this->request->getPost('priority'),
-            'state' => $this->request->getPost('state'),
-            'reminderDate' => $this->request->getPost('reminderDate'),
-            'expitarionDate' => $this->request->getPost('expirationDate'),
-            'color' => $this->request->getPost('color'),
-            'idAutor' => $idAutor,
+            'subject' => $task->getSubject(),
+            'description' => $task->getDescription(),
+            'state' => $task->getState(),
+            'reminderDate' => $task->getReminderDate()?->format('Y-m-d'),
+            'expirationDate' => $task->getExpirationDate()->format('Y-m-d'),
+            'idAutor' => $task->getIdAutor(),
         ];
 
         if (!$taskModel->insert($data)) {
-            print_r($taskModel->errors());
-        } else {
-            return redirect()->to('/tasks');
+            return redirect()->back()->withInput()->with('errors', $taskModel->errors());
         }
+
+        return redirect()->to('/tasks')->with('message', 'Tarea creada con éxito');
     }
 
     public function update($id)

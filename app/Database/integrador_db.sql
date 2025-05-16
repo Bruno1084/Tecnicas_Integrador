@@ -1,4 +1,7 @@
+-- Database schema with tables
+create schema tecnicas_integrador_db;
 use tecnicas_integrador_db;
+
 create table users(
 	id int not null auto_increment,
     name varchar(200) not null,
@@ -17,7 +20,6 @@ create table tasks(
     state enum('no iniciada', 'en proceso', 'completada') default 'no iniciada',    
     reminderDate Date,
     expirationDate Date not null,
-    color varchar(45) not null,
     idAutor int not null,
     primary key (id),
     foreign key (idAutor) references users(id) 
