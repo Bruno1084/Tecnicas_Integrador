@@ -20,8 +20,9 @@ $routes->post('/users', 'UserController::update');
 //Task Routes
 $routes->get('/tasks', 'TaskController::getAll');
 $routes->post('/tasks', 'TaskController::create');
+$routes->post('/tasks/update/(:num)', 'TaskController::update/$1');
+
 $routes->get('/new_task', 'TaskController::newTask');
-$routes->get('/completed_tasks', 'TaskController::completedTasks');
 
 //Subtask Routes
 $routes->get('/tasks/(:num)/subtasks', 'SubTaskController::getAll/$1');

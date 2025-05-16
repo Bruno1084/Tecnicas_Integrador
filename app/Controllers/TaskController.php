@@ -10,21 +10,6 @@ use InvalidArgumentException;
 
 class TaskController extends BaseController
 {
-    public function completedTasks()
-    {
-        $session = session();
-        $userId = $session->get('userId');
-
-        $filters = [
-            'userId' => $userId,
-            'state' => $this->request->getGet('state')
-        ];
-
-        $data['completedTasks'] = $this->getFiltered($filters);
-
-        return view('Tasks/completed_tasks');
-    }
-
     public function getAll()
     {
         $session = session();
@@ -38,12 +23,13 @@ class TaskController extends BaseController
             'subject' => $this->request->getGet('subject'),
             'priority' => $this->request->getGet('priority'),
             'expirationDate' => $this->request->getGet('expirationDate'),
+            'state' => $this->request->getGet('state'),
         ];
 
         $data['tasks'] = $this->getFiltered($filters);
         $data['userNickname'] = $user['nickname'];
 
-        return view('/Tasks/index', $data);
+        return view('Tasks/index', $data);
     }
 
     public function getOne($id)
@@ -62,15 +48,25 @@ class TaskController extends BaseController
     {
         $taskModel = new TaskModel();
 
+        if (!isset($filters['userId'])) {
+            return []; // Seguridad mínima
+        }
+
         $taskModel->where('idAutor', $filters['userId']);
 
         if (!empty($filters['subject'])) {
             $taskModel->like('subject', $filters['subject']);
-        } elseif (!empty($filters['state'])) {
-            $taskModel->where('state', $filters['state']);
-        } elseif (!empty($filters['priority'])) {
+        }
+
+        if (!empty($filters['priority'])) {
             $taskModel->where('priority', $filters['priority']);
-        } elseif (!empty($filters['expirationDate'])) {
+        }
+
+        if (!empty($filters['state'])) {
+            $taskModel->where('state', $filters['state']);
+        }
+
+        if (!empty($filters['expirationDate'])) {
             $taskModel->where('expirationDate', $filters['expirationDate']);
         }
 
@@ -126,49 +122,50 @@ class TaskController extends BaseController
         return redirect()->to('/tasks')->with('message', 'Tarea creada con éxito');
     }
 
-    public function update($id)
+    public function update($idTask)
     {
         $taskModel = new TaskModel();
-        $data = $this->request->getJSON(true);
+        $session = session();
+        $idAutor = $session->get('userId');
 
-        if (!$taskModel->find($id)) {
-            return $this->response->setStatusCode(404)->setJSON([
-                'status' => 'error',
-                'message' => "Task not found - TaskController update function"
-            ]);
+
+        // Pasar fechas del formulario a Datetime
+        $expirationDate = new DateTime($this->request->getPost('expirationDate'));
+        $reminderDate = $this->request->getPost('reminderDate')
+            ? new DateTime($this->request->getPost('reminderDate'))
+            : null;
+
+        try {
+            $task = new Task(
+                $idTask,
+                $this->request->getPost('subject'),
+                $this->request->getPost('description'),
+                $this->request->getPost('priority'),
+                $this->request->getPost('state'),
+                $expirationDate,
+                $reminderDate,
+                $idAutor
+            );
+        } catch (InvalidArgumentException $e) {
+            // Hay un error con los inputs. Devolver errores de Type Task
+            return redirect()->back()->withInput()->with('error', $e->getMessage());
         }
 
-        if (!$taskModel->update($id, $data)) {
-            return $this->response->setStatusCode(400)->setJSON([
-                'status' => 'error',
-                'message' => 'it was not posible to update the task',
-                'errors' => $taskModel->errors()
-            ]);
+        $data = [
+            'subject' => $task->getSubject(),
+            'description' => $task->getDescription(),
+            'state' => $task->getState(),
+            'reminderDate' => $task->getReminderDate()?->format('Y-m-d'),
+            'expirationDate' => $task->getExpirationDate()->format('Y-m-d'),
+            'idAutor' => $task->getIdAutor(),
+        ];
+
+        if (!$taskModel->update($task->getId(), $data)) {
+            return redirect()->back()->withInput()->with('errors', $taskModel->errors());
         }
 
-        return $this->response->setJSON([
-            'status' => 'success',
-            'message' => 'Task updated successfully',
-            'data' => $data
-        ]);
+        return redirect()->to('/tasks')->with('message', 'Tarea creada con éxito');
     }
 
-    public function delete($id)
-    {
-        $taskModel = new TaskModel();
-
-        if (!$taskModel->find($id)) {
-            return $this->response->setStatusCode(404)->setJSON([
-                'status' => 'error',
-                'message' => "Task not found - TaskController delete function"
-            ]);
-        }
-
-        $taskModel->delete($id);
-
-        return $this->response->setJSON([
-            'status' => 'success',
-            'message' => "Task deleted successfully"
-        ]);
-    }
+    public function delete($id) {}
 }

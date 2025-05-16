@@ -43,9 +43,9 @@ class Task
             throw new \InvalidArgumentException("El asunto no puede ser un número.");
         }
 
-        $estadosValidos = ['no iniciada', 'en progreso', 'completada'];
+        $estadosValidos = ['no iniciada', 'en proceso', 'completada'];
         if (!in_array(strtolower($this->state), $estadosValidos)) {
-            throw new \InvalidArgumentException("Estado inválido. Debe ser: no iniciada, en progreso o completada.");
+            throw new \InvalidArgumentException("Estado inválido. Debe ser: no iniciada, en proceso o completada.");
         }
 
         $hoy = new \DateTime();
@@ -128,9 +128,9 @@ class Task
 
     public function setState(string $state): void
     {
-        $estadosValidos = ['no iniciada', 'en progreso', 'completada'];
+        $estadosValidos = ['no iniciada', 'en proceso', 'completada'];
         if (!in_array(strtolower($state), $estadosValidos)) {
-            throw new \InvalidArgumentException("Estado inválido. Debe ser: no iniciada, en progreso o completada.");
+            throw new \InvalidArgumentException("Estado inválido. Debe ser: no iniciada, en proceso o completada.");
         }
         $this->state = $state;
     }

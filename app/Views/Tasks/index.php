@@ -23,7 +23,6 @@ function getColorByPriority($priority)
 <main>
     <h2>Task List</h2>
     <a href="<?= site_url('new_task') ?>">Create Task</a>
-    <a href="<?= site_url('completed_tasks') ?>">Completed Tasks</a>
     <?= view('layout/TaskFilter') ?>
 
     <section class="taskList--container">
