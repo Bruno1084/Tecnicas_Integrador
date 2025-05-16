@@ -21,7 +21,7 @@ class TaskController extends BaseController
         return view('Tasks/completed_tasks');
     }
 
-    public function getAll(): string
+    public function getAll()
     {
         $session = session();
         $userId = $session->get('userId');
@@ -31,7 +31,7 @@ class TaskController extends BaseController
 
         $filters = [
             'userId' => $userId,
-            'name' => $this->request->getGet('name'),
+            'subject' => $this->request->getGet('subject'),
             'priority' => $this->request->getGet('priority'),
             'expirationDate' => $this->request->getGet('expirationDate'),
         ];
@@ -60,8 +60,8 @@ class TaskController extends BaseController
 
         $taskModel->where('idAutor', $filters['userId']);
 
-        if (!empty($filters['name'])) {
-            $taskModel->like('name', $filters['name']);
+        if (!empty($filters['subject'])) {
+            $taskModel->like('subject', $filters['subject']);
         } elseif (!empty($filters['state'])) {
             $taskModel->where('state', $filters['state']);
         } elseif (!empty($filters['priority'])) {

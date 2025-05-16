@@ -1,6 +1,6 @@
 <div class="taskFilter--container">
     <form action="/tasks" method="get">
-        <input type="text" name="name" placeholder="Task Title">
+        <input type="text" name="subject" placeholder="Task subject">
         <select name="priority">
             <option value="">-- Priority --</option>
             <option value="alta">Alta</option>
