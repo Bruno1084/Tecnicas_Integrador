@@ -15,7 +15,9 @@ class SubTaskModel extends Model
         'priority',
         'state',
         'reminderDate',
+        'expirationDate',
         'comment',
         'idResponsible',
+        'idTask'
     ];
 }

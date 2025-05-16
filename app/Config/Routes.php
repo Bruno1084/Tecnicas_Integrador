@@ -30,5 +30,5 @@ $routes->get('/tasks/(:num)/subtasks/(:num)', 'SubtaskController::getOne/$1');
 
 $routes->get('/subtasks/(:num)', 'SubTaskController::getOne/$1');
 $routes->post('/subtasks', 'SubTaskController::create');
-$routes->put('/subtasks/(:num)', 'SubTaskController::update/$1');
+$routes->post('/subtasks/update/(:num)', 'SubTaskController::update/$1');
 $routes->delete('/subtasks/(:num)', 'SubTaskController::delete/$1');

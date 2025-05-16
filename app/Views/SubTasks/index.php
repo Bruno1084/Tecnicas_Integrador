@@ -24,8 +24,14 @@ switch ($task['priority']) {
 <main class="taskCard-main">
 
 
+
+
     <form action="<?= site_url('/tasks/update/' . $task['id']) ?>" method="post">
-        <?= csrf_field() ?>
+        <!-- If there is an error inputs, returns exception messages -->
+        <?php if (session()->has('error')): ?>
+            <div class="alert alert-danger"><?= session('error') ?></div>
+        <?php endif; ?>
+
         <style>
             .taskCard--container {
                 border-left: 10px solid <?= $color ?>;
@@ -87,8 +93,7 @@ switch ($task['priority']) {
                     <input type="date" name="reminderDate" value="<?= esc($task['reminderDate']) ?>">
                 </div>
                 <div>
-                    <button type="submit">Guardar Cambios</button>
-                    <a href="<?= site_url('/tasks') ?>"><button type="button">Cancelar</button></a>
+                    <input type="submit" value="Guardar cambios">
                 </div>
             </div>
         </section>

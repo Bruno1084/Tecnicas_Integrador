@@ -154,6 +154,7 @@ class TaskController extends BaseController
         $data = [
             'subject' => $task->getSubject(),
             'description' => $task->getDescription(),
+            'priority' => $task->getPriority(),
             'state' => $task->getState(),
             'reminderDate' => $task->getReminderDate()?->format('Y-m-d'),
             'expirationDate' => $task->getExpirationDate()->format('Y-m-d'),
