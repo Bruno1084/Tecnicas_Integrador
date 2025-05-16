@@ -2,14 +2,14 @@
     <div class="subTaskCardPreview-header--container">
         <div class="subTaskCardPreview-header-left">
             <img src="/img/person-circle.svg" alt="icon">
-            <p><?= $nickname ?></p>
+            <p><?= esc($nickname) ?></p>
         </div>
         <div class="subTaskCardPreview-header-right">
-            <p><?= $priority ?></p>
+            <p><?= esc($priority) ?></p>
         </div>
     </div>
     <div class="subTaskCardPreview-body--container">
-        <p><?= $subject ?></p>        
-        <p><?= $description ?></p>
+        <p><?= esc($subject) ?></p>
+        <p><?= esc($description) ?></p>
     </div>
 </a>

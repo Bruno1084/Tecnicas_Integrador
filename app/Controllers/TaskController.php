@@ -73,6 +73,8 @@ class TaskController extends BaseController
         return $taskModel->findAll();
     }
 
+    
+
     public function newTask()
     {
         return view('Tasks/new_task');
