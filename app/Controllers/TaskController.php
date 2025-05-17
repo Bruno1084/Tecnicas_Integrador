@@ -107,44 +107,51 @@ class TaskController extends BaseController
         return view('/Tasks/share_task', ['task' => $task]);
     }
 
-public function sharedTasks()
-{
-    $session = session();
-    $userId = $session->get('userId');
+    public function sharedTasks()
+    {
+        $session = session();
+        $userId = $session->get('userId');
 
-    $taskCollaboratorModel = new TaskCollaboratorModel();
-    $taskModel = new TaskModel();
+        $taskCollaboratorModel = new TaskCollaboratorModel();
+        $taskModel = new TaskModel();
 
-    // Obtener IDs de tareas compartidas con el usuario
-    $sharedTaskIds = $taskCollaboratorModel
-        ->where('idUser', $userId)
-        ->select('idTask')
-        ->findColumn('idTask');
+        // 1. Tareas compartidas CON el usuario (colaborador)
+        $sharedTaskIdsByUser = $taskCollaboratorModel
+            ->where('idUser', $userId)
+            ->select('idTask')
+            ->findColumn('idTask');
 
-    if (empty($sharedTaskIds)) {
+        // 2. Tareas creadas por el usuario que tienen colaboradores
+        $sharedTaskIdsByAuthor = $taskCollaboratorModel
+            ->select('idTask')
+            ->join('tasks', 'tasks.id = task_collaborators.idTask')
+            ->where('tasks.idAutor', $userId)
+            ->groupBy('idTask')
+            ->findColumn('idTask');
+
+        // Combinar IDs sin duplicados
+        $allSharedTaskIds = array_unique(array_merge($sharedTaskIdsByUser, $sharedTaskIdsByAuthor));
+
+        if (empty($allSharedTaskIds)) {
+            return view('/Tasks/shared_tasks', [
+                'sharedTasks' => [],
+                'userNickname' => 'Colaborador'
+            ]);
+        }
+
+        // Obtener tareas con nickname del autor
+        $sharedTasks = $taskModel
+            ->select('tasks.*, users.nickname as authorNickname')
+            ->join('users', 'tasks.idAutor = users.id')
+            ->whereIn('tasks.id', $allSharedTaskIds)
+            ->asArray()
+            ->findAll();
+
         return view('/Tasks/shared_tasks', [
-            'sharedTasks' => [],
+            'sharedTasks' => $sharedTasks,
             'userNickname' => 'Colaborador'
         ]);
     }
-
-    // Obtener tareas con nickname del autor
-    $sharedTasks = $taskModel
-        ->select('tasks.*, users.nickname as authorNickname')
-        ->join('users', 'tasks.idAutor = users.id')
-        ->whereIn('tasks.id', $sharedTaskIds)
-        ->asArray()
-        ->findAll();
-
-    return view('/Tasks/shared_tasks', [
-        'sharedTasks' => $sharedTasks,
-        'userNickname' => 'Colaborador'
-    ]);
-}
-
-
-
-
 
     public function addShareTask($idTask)
     {

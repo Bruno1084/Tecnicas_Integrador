@@ -25,13 +25,19 @@ class SubTaskController extends BaseController
         $subTaskModel = new SubTaskModel();
         $taskModel = new TaskModel();
 
-        $data['task'] = $taskModel->find($idTask);
+        // Obtener la tarea completa con el autor (nickname del autor)
+        $data['task'] = $taskModel
+            ->select('tasks.*, users.nickname as authorNickname')
+            ->join('users', 'users.id = tasks.idAutor')
+            ->where('tasks.id', $idTask)
+            ->first();
 
         $builder = $subTaskModel->builder();
 
+        // Obtener subtasks con nickname del responsable
         $subTasks = $builder
             ->select('subtasks.*, users.nickname as responsibleNickname')
-            ->join('users', 'users.id = subtasks.idResponsible')
+            ->join('users', 'users.id = subtasks.idResponsible', 'left') // left join por si no hay responsable asignado
             ->where('subtasks.idTask', $idTask)
             ->get()
             ->getResultArray();

@@ -65,6 +65,13 @@ switch ($task['priority']) {
 
             <div class="taskCard-task-col taskCard-col2">
                 <div>
+                    <p><strong>Autor</strong></p>
+                </div>
+                <div class="taskCardPreview-header-left">
+                    <img src="/img/person-circle.svg" alt="icon">
+                    <p><?= esc($task['authorNickname']) ?></p>
+                </div>
+                <div>
                     <p><strong>State</strong></p>
                     <select name="state" id="state" required>
                         <option value="no iniciada" <?= $task['state'] == 'no iniciada' ? 'selected' : '' ?>>No iniciada</option>

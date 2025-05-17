@@ -28,3 +28,13 @@
 .taskCard-subtaskList {
     margin: 10px 0px;
 }
+
+.taskCardPreview-header-left {
+    display: flex;
+}
+
+.taskCardPreview-header-left img {
+    width: 22px;
+    height: 22px;
+    margin-right: 5px;
+}
