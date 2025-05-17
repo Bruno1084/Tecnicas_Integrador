@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Models\UserModel;
+use App\Types\User;
+use InvalidArgumentException;
 
 class Auth extends BaseController
 {
@@ -25,7 +27,7 @@ class Auth extends BaseController
             $session->set([
                 'userId' => $user['id'],
                 'userEmail' => $user['email'],
-                'userNickname' =>$user['nickname'],
+                'userNickname' => $user['nickname'],
                 'loggedIn' => true
             ]);
             return redirect()->to('/tasks');
@@ -48,20 +50,32 @@ class Auth extends BaseController
 
     public function signUpPost()
     {
-        $model = new UserModel();
+        $userModel = new UserModel();
+
+        try {
+            $user = new User(
+                0,
+                $this->request->getPost('name'),
+                $this->request->getPost('nickname'),
+                $this->request->getPost('email'),
+                $this->request->getPost('password')
+            );
+        } catch (InvalidArgumentException $e) {
+            return redirect()->back()->withInput()->with('error', $e->getMessage());
+        }
 
         $data = [
-            'name' => $this->request->getPost('name'),
-            'nickname' => $this->request->getPost('nickname'),
-            'email' => $this->request->getPost('email'),
-            'password' => $this->request->getPost('password'),
+            'name' => $user->getName(),
+            'nickname' => $user->getNickname(),
+            'email' => $user->getEmail(),
+            'password' => $user->getPassword(),
             'active' => true,
         ];
 
-        if (!$model->insert($data)) {
-            print_r($model->errors());
-        } else {
-            return redirect()->to('/login');
+        if (!$userModel->insert($data)) {
+            return redirect()->back()->withInput()->with('errors', $userModel->errors());
         }
+
+        return redirect()->to('/log_in')->with('message', 'Usuario registrado con éxito');
     }
 }

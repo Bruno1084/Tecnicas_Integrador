@@ -89,9 +89,15 @@ switch ($task['priority']) {
                     <input type="date" name="reminderDate" value="<?= esc($task['reminderDate']) ?>">
                 </div>
                 <div>
-                    <input type="submit" value="Save Changes">
-                    <br>
-                    <a href="<?= site_url('/subtasks/new_subtask/' . $task['id']) ?>">Add Subtask</a>
+                    <div>
+                        <input type="submit" value="Save Changes">
+                    </div>
+                    <div>
+                        <a href="<?= site_url('/subtasks/new_subtask/' . $task['id']) ?>">Add Subtask</a>
+                    </div>
+                    <div>
+                        <a href="<?= site_url('/tasks/share_task/' . $task['id']) ?>">Share Task</a>
+                    </div>
                 </div>
             </div>
         </section>

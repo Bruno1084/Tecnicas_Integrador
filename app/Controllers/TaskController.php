@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\TaskCollaboratorModel;
 use App\Models\TaskModel;
 use App\Models\UserModel;
 use App\Types\Task;
@@ -24,6 +25,7 @@ class TaskController extends BaseController
             'priority' => $this->request->getGet('priority'),
             'expirationDate' => $this->request->getGet('expirationDate'),
             'state' => $this->request->getGet('state'),
+            'excludeSharedByUser' => true,
         ];
 
         $data['tasks'] = $this->getFiltered($filters);
@@ -31,6 +33,7 @@ class TaskController extends BaseController
 
         return view('Tasks/index', $data);
     }
+
 
     public function getOne($id)
     {
@@ -49,10 +52,24 @@ class TaskController extends BaseController
         $taskModel = new TaskModel();
 
         if (!isset($filters['userId'])) {
-            return []; // Seguridad mínima
+            return [];
         }
 
         $taskModel->where('idAutor', $filters['userId']);
+
+        if (!empty($filters['excludeSharedByUser'])) {
+            $taskCollaboratorModel = new TaskCollaboratorModel();
+            $sharedTaskIdsByUser = $taskCollaboratorModel
+                ->select('idTask')
+                ->join('tasks', 'tasks.id = task_collaborators.idTask')
+                ->where('tasks.idAutor', $filters['userId'])
+                ->findColumn('idTask');
+
+            if (!empty($sharedTaskIdsByUser)) {
+                $taskModel->whereNotIn('id', $sharedTaskIdsByUser);
+            }
+        }
+
 
         if (!empty($filters['subject'])) {
             $taskModel->like('subject', $filters['subject']);
@@ -73,11 +90,91 @@ class TaskController extends BaseController
         return $taskModel->findAll();
     }
 
-    
-
     public function newTask()
     {
         return view('Tasks/new_task');
+    }
+
+    public function shareTask($idTask)
+    {
+        $taskModel = new TaskModel();
+        $task = $taskModel->find($idTask);
+
+        if (!$task) {
+            return redirect()->to('/tasks')->with('error', 'Tarea no encontrada.');
+        }
+
+        return view('/Tasks/share_task', ['task' => $task]);
+    }
+
+public function sharedTasks()
+{
+    $session = session();
+    $userId = $session->get('userId');
+
+    $taskCollaboratorModel = new TaskCollaboratorModel();
+    $taskModel = new TaskModel();
+
+    // Obtener IDs de tareas compartidas con el usuario
+    $sharedTaskIds = $taskCollaboratorModel
+        ->where('idUser', $userId)
+        ->select('idTask')
+        ->findColumn('idTask');
+
+    if (empty($sharedTaskIds)) {
+        return view('/Tasks/shared_tasks', [
+            'sharedTasks' => [],
+            'userNickname' => 'Colaborador'
+        ]);
+    }
+
+    // Obtener tareas con nickname del autor
+    $sharedTasks = $taskModel
+        ->select('tasks.*, users.nickname as authorNickname')
+        ->join('users', 'tasks.idAutor = users.id')
+        ->whereIn('tasks.id', $sharedTaskIds)
+        ->asArray()
+        ->findAll();
+
+    return view('/Tasks/shared_tasks', [
+        'sharedTasks' => $sharedTasks,
+        'userNickname' => 'Colaborador'
+    ]);
+}
+
+
+
+
+
+    public function addShareTask($idTask)
+    {
+        $email = $this->request->getPost('email');
+        $userModel = new UserModel();
+        $taskCollaboratorModel = new TaskCollaboratorModel();
+
+        $user = $userModel->where('email', $email)->first();
+
+        if (!$user) {
+            return redirect()->back()->with('error', 'No se encontró un usuario con ese correo.');
+        }
+
+        // Verificar si ya es colaborador
+        $exists = $taskCollaboratorModel
+            ->where('idTask', $idTask)
+            ->where('idUser', $user['id'])
+            ->first();
+
+        if ($exists) {
+            return redirect()->back()->with('error', 'Este usuario ya es colaborador de la tarea.');
+        }
+
+        // Insertar colaboración
+        $taskCollaboratorModel->insert([
+            'idTask' => $idTask,
+            'idUser' => $user['id'],
+        ]);
+
+        return redirect()->back()->with('message', 'Tarea compartida con éxito.');
     }
 
     public function create()

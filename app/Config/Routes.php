@@ -18,11 +18,15 @@ $routes->get('/users/(:segment)', 'UserController::getOneByNickname/$1');
 $routes->post('/users', 'UserController::update');
 
 //Task Routes
-$routes->get('/tasks', 'TaskController::getAll');
+$routes->get('/tasks', 'TaskController::getAll'); // Returns all not shared tasks
 $routes->post('/tasks', 'TaskController::create');
 $routes->post('/tasks/update/(:num)', 'TaskController::update/$1');
-
 $routes->get('/new_task', 'TaskController::newTask');
+$routes->get('/shared_tasks', 'TaskController::sharedTasks'); // Returns shared tasks
+
+$routes->post('/tasks/share_task/(:num)', 'TaskController::addShareTask/$1');
+$routes->get('/tasks/share_task/(:num)', 'TaskController::shareTask/$1');
+
 
 //Subtask Routes
 $routes->get('/tasks/(:num)/subtasks', 'SubTaskController::getAll/$1');

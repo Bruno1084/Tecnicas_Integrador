@@ -13,6 +13,10 @@
     <main>
         <div id="signUp--container">
             <form action="/sign_up" method="post">
+                <?php if (session()->has('error')): ?>
+                    <div class="alert alert-danger"><?= session('error') ?></div>
+                <?php endif; ?>
+
                 <div class="signUp-header--container signUp-box">
                     <h3 class="signUp-header">Sign Up</h3>
                 </div>

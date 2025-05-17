@@ -5,21 +5,18 @@
 ]]) ?>
 
 <main>
-    <h2>Task List</h2>
-    <a href="<?= site_url('/new_task') ?>">Create Task</a>
-    <a href="<?= site_url('/shared_tasks') ?>">Shared Tasks</a>
+    <h2>Shared Tasks</h2>
 
     <?= view('layout/TaskFilter') ?>
 
     <section class="taskList--container">
-
-        <?php if (empty($tasks)): ?>
+        <?php if (empty($sharedTasks)): ?>
             <p>No hay tareas disponibles.</p>
         <?php else: ?>
-            <?php foreach ($tasks as $task): ?>
+            <?php foreach ($sharedTasks as $task): ?>
                 <?= view('/layout/TaskCardPreview', [
                     'id' => $task['id'],
-                    'nickname' => $userNickname,
+                    'nickname' => $task['authorNickname'],
                     'subject' => $task['subject'],
                     'description' => $task['description'],
                     'priority' => $task['priority'],

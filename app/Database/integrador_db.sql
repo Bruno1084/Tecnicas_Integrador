@@ -43,3 +43,13 @@ create table subtasks(
 	FOREIGN KEY (idTask) REFERENCES tasks(id)
 		ON DELETE CASCADE
 );
+
+CREATE TABLE task_collaborators(
+id int not null auto_increment,
+idUser int not null,
+idTask int not null,
+canEdit boolean not null,
+primary key(id),
+foreign key (idUser) references users(id),
+foreign key (idTask) references tasks(id)
+);
