@@ -105,6 +105,13 @@ switch ($task['priority']) {
                     <div>
                         <a href="<?= site_url('/tasks/share_task/' . $task['id']) ?>">Share Task</a>
                     </div>
+                    <div>
+                        <form action="/tasks/delete/<?= $task['id'] ?>" method="post">
+                            <?= csrf_field() ?>
+                            <button type="submit">Eliminar</button>
+                        </form>
+                    </div>
+
                 </div>
             </div>
         </section>

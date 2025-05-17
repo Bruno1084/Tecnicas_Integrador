@@ -1,4 +1,4 @@
-<a href="<?= base_url('tasks/' . $idTask . '/subtasks/' . $idSubTask) ?>" class="subTaskCardPreview--container">
+<a href="<?= base_url('subtasks/' . $idSubTask) ?>" class="subTaskCardPreview--container">
     <div class="subTaskCardPreview-header--container">
         <div class="subTaskCardPreview-header-left">
             <img src="/img/person-circle.svg" alt="icon">

@@ -17,5 +17,11 @@ class TaskModel extends Model
         'reminderDate',
         'expirationDate',
         'idAutor',
+        'active'
     ];
+
+    public function getAllActive()
+    {
+        return $this->where('active', 1)->findAll();
+    }
 }

@@ -24,9 +24,9 @@
         </div>
         <div class="headerNav--container">
             <nav>
+                <a href="/tasks">Tasks</a>
                 <a href="/users/<?= $currentUser['nickname']?>">Profile</a>
                 <a href="/log_out">Log out</a>
-                <a href="#">Notifications</a>
             </nav>
         </div>
     </header>

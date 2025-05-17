@@ -26,6 +26,7 @@ class TaskController extends BaseController
             'expirationDate' => $this->request->getGet('expirationDate'),
             'state' => $this->request->getGet('state'),
             'excludeSharedByUser' => true,
+            'active'
         ];
 
         $data['tasks'] = $this->getFiltered($filters);
@@ -57,6 +58,14 @@ class TaskController extends BaseController
 
         $taskModel->where('idAutor', $filters['userId']);
 
+        // Filtrado por tareas activas/inactivas
+        if (!isset($filters['active']) || $filters['active'] === true) {
+            $taskModel->where('active', 1);
+        } else {
+            $taskModel->where('active', 0);
+        }
+
+        // Excluir tareas compartidas por el usuario
         if (!empty($filters['excludeSharedByUser'])) {
             $taskCollaboratorModel = new TaskCollaboratorModel();
             $sharedTaskIdsByUser = $taskCollaboratorModel
@@ -70,7 +79,7 @@ class TaskController extends BaseController
             }
         }
 
-
+        // Filtros adicionales
         if (!empty($filters['subject'])) {
             $taskModel->like('subject', $filters['subject']);
         }
@@ -89,6 +98,7 @@ class TaskController extends BaseController
 
         return $taskModel->findAll();
     }
+
 
     public function newTask()
     {
@@ -274,5 +284,24 @@ class TaskController extends BaseController
         return redirect()->to('/tasks')->with('message', 'Tarea creada con éxito');
     }
 
-    public function delete($id) {}
+    public function delete($id)
+    {
+        $taskModel = new TaskModel();
+        $session = session();
+        $userId = $session->get('userId');
+
+        $task = $taskModel->find($id);
+
+        if (!$task) {
+            return redirect()->back()->with('error', 'Tarea no encontrada.');
+        }
+
+        if ($task['idAutor'] != $userId) {
+            return redirect()->back()->with('error', 'No tienes permisos para eliminar esta tarea.');
+        }
+
+        $taskModel->update($id, ['active' => 0]);
+
+        return redirect()->to('/tasks')->with('message', 'Tarea eliminada con éxito.');
+    }
 }

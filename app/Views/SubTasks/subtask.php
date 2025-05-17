@@ -55,7 +55,7 @@
                 </div>
                 <div>
                     <input type="submit" value="Edit Subtask">
-                    
+
                 </div>
             </div>
         </section>
