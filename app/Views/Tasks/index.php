@@ -1,32 +1,73 @@
-<?= view('layout/header', ['styles' => [
-    'header.css',
-    'tasksScreen.css',
-    'taskCardPreview.css'
-]]) ?>
+<!DOCTYPE html>
+<html lang="es">
 
-<main>
-    <h2>Task List</h2>
-    <a href="<?= site_url('/new_task') ?>">Create Task</a>
-    <a href="<?= site_url('/shared_tasks') ?>">Shared Tasks</a>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/tareaTable.css">
+    <title>Manejador de Tareas</title>
+</head>
 
-    <?= view('layout/TaskFilter') ?>
+<body>
+    <?= view('Layout/header.php'); ?>
 
-    <section class="taskList--container">
+    <main>
+        <?= view('Layout/sideBar.php'); ?>
 
-        <?php if (empty($tasks)): ?>
-            <p>No hay tareas disponibles.</p>
-        <?php else: ?>
-            <?php foreach ($tasks as $task): ?>
-                <?= view('/layout/TaskCardPreview', [
-                    'id' => $task['id'],
-                    'nickname' => $userNickname,
-                    'subject' => $task['subject'],
-                    'description' => $task['description'],
-                    'priority' => $task['priority'],
-                ]) ?>
-            <?php endforeach; ?>
-        <?php endif; ?>
-    </section>
-</main>
+        <section>
+            <h1>Tareas</h1>
 
-<?= view('layout/footer') ?>
+            <div class="options--container">
+                <div>
+                    <a href="/tasks/crear">Añadir</a>
+                </div>
+                <div>
+                    <a href="/tasks/eliminar">Eliminar</a>
+                </div>
+            </div>
+
+            <?= view('Layout/TaskFilter') ?>
+
+            <section class="table--container">
+                <?php if (!isset($tasks) || !is_array($tasks) || count($tasks) === 0): ?>
+                    <div class="empty-message">
+                        <p>No hay tareas registradas.</p>
+                    </div>
+                <?php else: ?>
+                    <!-- Cabecera -->
+                    <div class="table--header">
+                        <div>ID</div>
+                        <div>Título</div>
+                        <div>Descripcion</div>
+                        <div>Prioridad</div>
+                        <div>Estado</div>
+                        <div>Recordatorio</div>
+                        <div>Vencimiento</div>
+                        <div>Autor</div>
+                    </div>
+
+                    <!-- Filas -->
+                    <?php foreach ($tasks as $task): ?>
+                        <div class="table--row" onclick="window.location='/tasks/<?= $task['id'] ?>'">
+                            <div><?= htmlspecialchars($task['id']) ?></div>
+                            <div><?= htmlspecialchars($task['subject']) ?></div>
+                            <div><?= htmlspecialchars($task['description']) ?></div>
+                            <div><?= htmlspecialchars($task['priority']) ?></div>
+                            <div><?= htmlspecialchars($task['state']) ?></div>
+                            <div><?= htmlspecialchars($task['reminderDate']) ?></div>
+                            <div><?= htmlspecialchars($task['expirationDate']) ?></div>
+                            <div><?= htmlspecialchars($userNickname) ?></div>
+                            <div class="row--actions" onclick="event.stopPropagation()">
+                                <a href="/tasks/editar/<?= $task['id'] ?>">✏️</a>
+                                <a href="/tasks/eliminar/<?= $task['id'] ?>">❌</a>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </section>
+        </section>
+    </main>
+</body>
+
+</html>

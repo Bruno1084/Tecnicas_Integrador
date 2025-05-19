@@ -17,8 +17,10 @@ $routes->get('/log_out', 'Auth::logout');
 $routes->get('/users/(:segment)', 'UserController::getOneByNickname/$1');
 $routes->post('/users', 'UserController::update');
 
-//Task Routes
+// Task Routes
 $routes->get('/tasks', 'TaskController::getAll'); // Returns all not shared tasks
+$routes->get('/tasks/(:num)', 'TaskController::getOne/$1');
+
 $routes->post('/tasks', 'TaskController::create');
 $routes->post('/tasks/update/(:num)', 'TaskController::update/$1');
 $routes->get('/new_task', 'TaskController::newTask');

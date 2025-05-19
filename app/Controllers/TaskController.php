@@ -2,9 +2,11 @@
 
 namespace App\Controllers;
 
+use App\Models\SubTaskModel;
 use App\Models\TaskCollaboratorModel;
 use App\Models\TaskModel;
 use App\Models\UserModel;
+use App\Types\SubTask;
 use App\Types\Task;
 use DateTime;
 use InvalidArgumentException;
@@ -17,7 +19,7 @@ class TaskController extends BaseController
         $userId = $session->get('userId');
 
         $userModel = new UserModel();
-        $user = $userModel->where('id', $userId)->first();
+        $user = $userModel->find($userId);
 
         $filters = [
             'userId' => $userId,
@@ -35,17 +37,17 @@ class TaskController extends BaseController
         return view('Tasks/index', $data);
     }
 
-
     public function getOne($id)
     {
         $taskModel = new TaskModel();
-        $task = $taskModel->find($id);
+        $session = session();
 
-        if (!$task) {
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Task not found - TaskController getOne function");
-        }
+        $data = [
+            'task' => $taskModel->getTask($id),
+            'subtasks' => $taskModel->getAllSubtasksFromTask($id),
+        ];
 
-        return $this->response->setJSON($task);
+        return view('/tasks/ver_tarea', $data);
     }
 
     public function getFiltered($filters = [])
@@ -98,7 +100,6 @@ class TaskController extends BaseController
 
         return $taskModel->findAll();
     }
-
 
     public function newTask()
     {

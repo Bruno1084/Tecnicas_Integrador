@@ -27,7 +27,7 @@
                     </div>
                     <div class="login-password--container login-box">
                         <p>Password</p>
-                        <input type="text" name="password" id="password">
+                        <input type="password" name="password" id="password">
                     </div>
                     <div class="login-button--container login-box">
                         <input type="submit" value="Submit">
