@@ -2,17 +2,16 @@
 
 namespace App\Controllers;
 
-use App\Models\SubTaskModel;
 use App\Models\TaskCollaboratorModel;
 use App\Models\TaskModel;
 use App\Models\UserModel;
-use App\Types\SubTask;
 use App\Types\Task;
 use DateTime;
 use InvalidArgumentException;
 
 class TaskController extends BaseController
 {
+    // Get Routes
     public function getAll()
     {
         $session = session();
@@ -34,7 +33,7 @@ class TaskController extends BaseController
         $data['tasks'] = $this->getFiltered($filters);
         $data['userNickname'] = $user['nickname'];
 
-        return view('Tasks/index', $data);
+        return view('tasks/index', $data);
     }
 
     public function getOne($id)
@@ -101,10 +100,66 @@ class TaskController extends BaseController
         return $taskModel->findAll();
     }
 
-    public function newTask()
+
+    // Create Routes
+    public function getCreate()
     {
-        return view('Tasks/new_task');
+        return view('/tasks/crear_tarea');
     }
+
+    public function postCreate()
+    {
+        $session = session();
+        $idAutor = $session->get('userId');
+
+        $taskModel = new TaskModel();
+
+        // Pasar fechas del formulario a Datetime
+        $expirationDate = new DateTime($this->request->getPost('expirationDate'));
+        $reminderDate = $this->request->getPost('reminderDate')
+            ? new DateTime($this->request->getPost('reminderDate'))
+            : null;
+
+        try {
+            $task = new Task(
+                0,
+                $this->request->getPost('subject'),
+                $this->request->getPost('description'),
+                $this->request->getPost('priority'),
+                'no iniciada',
+                $expirationDate,
+                $reminderDate,
+                $idAutor,
+            );
+        } catch (InvalidArgumentException $e) {
+            return redirect()->back()->withInput()->with('error', $e->getMessage());
+        }
+
+        $data = [
+            'subject' => $task->getSubject(),
+            'description' => $task->getDescription(),
+            'priority' => $task->getPriority(),
+            'state' => $task->getState(),
+            'expirationDate' => $task->getExpirationDate()->format('Y-m-d'),
+            'reminderDate' => $task->getReminderDate()?->format('Y-m-d'),
+            'idAutor' => $task->getIdAutor(),
+        ];
+
+        $newTaskId = $taskModel->insert($data);
+        if (!$newTaskId) {
+            return redirect()->back()->withInput()->with('errors', $taskModel->errors());
+        }
+
+        return redirect()->to('/tasks/' . $newTaskId)->with('message', 'Subtarea creada con éxito');
+    }
+
+
+    // Edit Routes
+    public function getEdit() {}
+
+    public function postEdit($idTask) {}
+
+
 
     public function shareTask($idTask)
     {
@@ -226,9 +281,10 @@ class TaskController extends BaseController
         $data = [
             'subject' => $task->getSubject(),
             'description' => $task->getDescription(),
+            'priority' => $task->getPriority(),
             'state' => $task->getState(),
-            'reminderDate' => $task->getReminderDate()?->format('Y-m-d'),
             'expirationDate' => $task->getExpirationDate()->format('Y-m-d'),
+            'reminderDate' => $task->getReminderDate()?->format('Y-m-d'),
             'idAutor' => $task->getIdAutor(),
         ];
 
@@ -273,8 +329,8 @@ class TaskController extends BaseController
             'description' => $task->getDescription(),
             'priority' => $task->getPriority(),
             'state' => $task->getState(),
-            'reminderDate' => $task->getReminderDate()?->format('Y-m-d'),
             'expirationDate' => $task->getExpirationDate()->format('Y-m-d'),
+            'reminderDate' => $task->getReminderDate()?->format('Y-m-d'),
             'idAutor' => $task->getIdAutor(),
         ];
 

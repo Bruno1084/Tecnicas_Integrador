@@ -12,7 +12,7 @@ class Task
     private string $priority = "";
     private string $state = "";
     private DateTime $expirationDate;
-    private ?DateTime $reminderDate;
+    private ?DateTime $reminderDate = null;
     private int $idAutor = 0;
 
     public function __construct($id, $subject, $description, $priority, $state, $expirationDate, $reminderDate = null, $idAutor)
@@ -84,7 +84,7 @@ class Task
         return $this->state;
     }
 
-    public function getExpirationDate(): DateTime
+    public function getExpirationDate(): ?DateTime
     {
         return $this->expirationDate;
     }
@@ -135,21 +135,18 @@ class Task
         $this->state = $state;
     }
 
-    public function setExpirationDate(DateTime $expirationDate): void
+    public function setExpirationDate(DateTime $fecha): void
     {
-        $hoy = new \DateTime();
-        if ($expirationDate < $hoy) {
-            throw new \InvalidArgumentException("La fecha de vencimiento no puede estar en el pasado.");
-        }
-        $this->expirationDate = $expirationDate;
+        $this->expirationDate = $fecha instanceof DateTime ? $fecha : new DateTime($fecha);
     }
 
-    public function setReminderDate(?DateTime $reminderDate): void
+    public function setReminderDate(?DateTime $fecha): void
     {
-        if ($reminderDate !== null && isset($this->expirationDate) && $reminderDate > $this->expirationDate) {
-            throw new \InvalidArgumentException("La fecha de recordatorio debe ser anterior a la fecha de vencimiento.");
+        if (is_null($fecha)) {
+            $this->reminderDate = null;
+        } else {
+            $this->reminderDate = $fecha instanceof DateTime ? $fecha : new DateTime($fecha);
         }
-        $this->reminderDate = $reminderDate;
     }
 
     public function setIdAutor(int $idAutor): void

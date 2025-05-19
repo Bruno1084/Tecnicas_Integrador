@@ -20,10 +20,7 @@
 
             <div class="options--container">
                 <div>
-                    <a href="/tasks/crear">Añadir</a>
-                </div>
-                <div>
-                    <a href="/tasks/eliminar">Eliminar</a>
+                    <a href="/tasks/create">Añadir</a>
                 </div>
             </div>
 

@@ -3,39 +3,14 @@
 namespace App\Controllers;
 
 use App\Models\SubTaskModel;
-use App\Models\TaskCollaboratorModel;
 use App\Models\TaskModel;
-use App\Models\UserModel;
 use App\Types\SubTask;
 use DateTime;
 use InvalidArgumentException;
 
 class SubTaskController extends BaseController
 {
-    public function getAll($idTask)
-    {
-        $session = session();
-        $userId = $session->get('userId');
-
-        $userModel = new UserModel();
-        $user = $userModel->find($userId);
-
-        $filters = [
-            'userId' => $userId,
-            'subject' => $this->request->getGet('subject'),
-            'priority' => $this->request->getGet('priority'),
-            'expirationDate' => $this->request->getGet('expirationDate'),
-            'state' => $this->request->getGet('state'),
-            'excludeSharedByUser' => true,
-            'active' => true,
-        ];
-
-        $data['tasks'] = $this->getFiltered($filters);
-        $data['userNickname'] = $user['nickname'];
-
-        return view('Tasks/index', $data);
-    }
-
+    // Get Routes
     public function getOne($id)
     {
         $subTaskModel = new SubTaskModel();
@@ -46,56 +21,53 @@ class SubTaskController extends BaseController
         return view('subtasks/ver_subtarea', $data);
     }
 
-    public function getFiltered($filters = [])
+    // Create Routes
+    public function getCreate()
     {
-        $taskModel = new TaskModel();
-
-        if (!isset($filters['userId'])) {
-            return [];
-        }
-
-        $taskModel->where('idAutor', $filters['userId']);
-
-        // Filtrado por tareas activas/inactivas
-        if (!isset($filters['active']) || $filters['active'] === true) {
-            $taskModel->where('active', 1);
-        } else {
-            $taskModel->where('active', 0);
-        }
-
-        // Excluir tareas compartidas por el usuario
-        if (!empty($filters['excludeSharedByUser'])) {
-            $taskCollaboratorModel = new TaskCollaboratorModel();
-            $sharedTaskIdsByUser = $taskCollaboratorModel
-                ->select('idTask')
-                ->join('tasks', 'tasks.id = task_collaborators.idTask')
-                ->where('tasks.idAutor', $filters['userId'])
-                ->findColumn('idTask');
-
-            if (!empty($sharedTaskIdsByUser)) {
-                $taskModel->whereNotIn('id', $sharedTaskIdsByUser);
-            }
-        }
-
-        // Filtros adicionales
-        if (!empty($filters['subject'])) {
-            $taskModel->like('subject', $filters['subject']);
-        }
-
-        if (!empty($filters['priority'])) {
-            $taskModel->where('priority', $filters['priority']);
-        }
-
-        if (!empty($filters['state'])) {
-            $taskModel->where('state', $filters['state']);
-        }
-
-        if (!empty($filters['expirationDate'])) {
-            $taskModel->where('expirationDate', $filters['expirationDate']);
-        }
-
-        return $taskModel->findAll();
+        return view('subtask/crear_subtarea');
     }
+
+    public function postCreate()
+    {
+        $subTaskModel = new SubTaskModel();
+
+        try {
+            $subTask = new SubTask(
+                0,
+                $this->request->getPost('subject'),
+                $this->request->getPost('description'),
+                $this->request->getPost('priority'),
+                $this->request->getPost('state'),
+                $this->request->getPost('expirationDate'),
+                $this->request->getPost('reminderDate'),
+                $this->request->getPost('comment'),
+                $this->request->getPost('idResponsible'),
+                $this->request->getPost('idTask')
+            );
+        } catch (InvalidArgumentException $e) {
+            return redirect()->back()->withInput()->with('error', $e->getMessage());
+        }
+
+        $data = [
+            'id' => $subTask->getId(),
+            'subject' => $subTask->getSubject(),
+            'description' => $subTask->getDescription(),
+            'priority' => $subTask->getPriority(),
+            'state' => $subTask->getState(),
+            'expirationDate' => $subTask->getExpirationDate(),
+            'reminderDate' => $subTask->getReminderDate(),
+            'comment' => $subTask->getComment(),
+            'idResponsible' => $subTask->getIdResponsible(),
+            'idTask' => $subTask->getIdTask(),
+        ];
+
+        if (!$subTaskModel->insert($data)) {
+            return redirect()->back()->withInput()->with('errors', $subTaskModel->errors());
+        }
+
+        return redirect()->to('/subtasks/' . $subTask->getIdTask())->with('message', 'Subtarea creada con éxito');
+    }
+
 
     public function newSubTask($idTask)
     {

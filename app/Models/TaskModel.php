@@ -19,9 +19,7 @@ class TaskModel extends Model
         'idAutor'
     ];
 
-    /**
-     * Obtiene una tarea por ID, incluyendo datos del autor.
-     */
+    /* Obtiene una tarea por ID, incluyendo datos del autor. */
     public function getTask($idTask)
     {
         return $this->db->table('tasks t')
@@ -29,7 +27,7 @@ class TaskModel extends Model
             ->join('users u', 't.idAutor = u.id', 'left')
             ->where('t.id', $idTask)
             ->get()
-            ->getRowArray(); // Devuelve solo un resultado (no array de arrays)
+            ->getRowArray();
     }
 
     /**
@@ -41,9 +39,7 @@ class TaskModel extends Model
         return $this->where('active', 1)->findAll(); // Solo si tenés el campo 'active'
     }
 
-    /**
-     * Retorna todas las subtareas de una tarea específica.
-     */
+    /* Retorna todas las subtareas de una tarea específica. */
     public function getAllSubtasksFromTask(int $idTask)
     {
         return $this->db->table('subtasks st')
