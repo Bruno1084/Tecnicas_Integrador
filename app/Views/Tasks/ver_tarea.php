@@ -26,7 +26,7 @@
                     <a href="/tasks/eliminar">Eliminar</a>
                 </div>
             </div>
-
+            
             <section class="tableTask--container">
                 <!-- Cabecera -->
                 <div class="tableTask--header">
@@ -56,6 +56,7 @@
                     </div>
                 </div>
             </section>
+
 
             <h2>Subtareas</h2>
             <?= view('Layout/SubtaskFilter') ?>

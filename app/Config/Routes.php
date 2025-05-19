@@ -31,8 +31,10 @@ $routes->post('/tasks/delete/(:num)', 'TasksController::delete/$1');
 
 
 //Subtask Routes
-$routes->get('/tasks/(:num)/subtasks', 'SubTaskController::getAll/$1');
-$routes->get('/subtasks/new_subtask/(:num)', 'SubTaskController::newSubTask/$1');
+$routes->get('/subtasks', 'SubTaskController::getAll');
+$routes->get('/subtasks/(:num)', 'SubTaskController::getOne/$1');
+
+
 $routes->post('/subtasks/create', 'SubTaskController::create');
 $routes->get('/subtasks/(:num)', 'SubTaskController::getOne/$1');
 $routes->post('/subtasks/update/(:num)', 'SubTaskController::update/$1');

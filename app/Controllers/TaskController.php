@@ -28,7 +28,7 @@ class TaskController extends BaseController
             'expirationDate' => $this->request->getGet('expirationDate'),
             'state' => $this->request->getGet('state'),
             'excludeSharedByUser' => true,
-            'active'
+            'active' => true,
         ];
 
         $data['tasks'] = $this->getFiltered($filters);
