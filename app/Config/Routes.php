@@ -20,26 +20,29 @@ $routes->post('/users', 'UserController::update');
 
 
 // Task Routes
-$routes->get('/tasks', 'TaskController::getAll'); // Returns all not shared tasks
+$routes->get('/tasks', 'TaskController::getAll');
 $routes->get('/tasks/(:num)', 'TaskController::getOne/$1');
 // Task Create
 $routes->get('/tasks/create', 'TaskController::getCreate');
 $routes->post('/tasks/create', 'TaskController::postCreate');
 // Task Edit
-$routes->post('/tasks/update/(:num)', 'TaskController::update/$1');
-$routes->get('/new_task', 'TaskController::newTask');
-$routes->get('/shared_tasks', 'TaskController::sharedTasks'); // Returns shared tasks
-$routes->post('/tasks/share_task/(:num)', 'TaskController::addShareTask/$1');
-$routes->get('/tasks/share_task/(:num)', 'TaskController::shareTask/$1');
-$routes->post('/tasks/delete/(:num)', 'TasksController::delete/$1');
+$routes->get('/tasks/update/(:num)', 'TaskController::getUpdate/$1');
+$routes->post('tasks/update/(:num)', 'TaskController::postUpdate/$1');
+// Task Delete
+$routes->get('/tasks/delete/(:num)', 'TaskController::getDelete/$1');
+
+// $routes->get('/shared_tasks', 'TaskController::sharedTasks'); // Returns shared tasks
+// $routes->post('/tasks/share_task/(:num)', 'TaskController::addShareTask/$1');
+// $routes->get('/tasks/share_task/(:num)', 'TaskController::shareTask/$1');
 
 
 // Subtask Routes
 $routes->get('/subtasks/(:num)', 'SubTaskController::getOne/$1');
 // Subtask Create
-$routes->get('/subtasks/create', 'SubTaskController::getCreate');
+$routes->get('/subtasks/create/(:num)', 'SubTaskController::getCreate/$1');
 $routes->post('/subtasks/create', 'SubTaskController::postCreate');
-
-$routes->get('/subtasks/(:num)', 'SubTaskController::getOne/$1');
-$routes->post('/subtasks/update/(:num)', 'SubTaskController::update/$1');
-$routes->delete('/subtasks/(:num)', 'SubTaskController::delete/$1');
+// Subtask Edit
+$routes->get('/subtasks/update/(:num)', 'SubTaskController::getUpdate/$1');
+$routes->post('/subtasks/update/(:num)', 'SubTaskController::postUpdate/$1');
+// Subtask Delete
+$routes->get('/subtasks/delete/(:num)', 'SubTaskController::getDelete/$1');

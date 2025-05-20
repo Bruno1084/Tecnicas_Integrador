@@ -85,14 +85,18 @@ class SubTask
         $this->state = $state;
     }
 
-    public function setExpirationDate(DateTime $expirationDate): void
+    public function setExpirationDate(DateTime $fecha): void
     {
-        $this->expirationDate = $expirationDate;
+        $this->expirationDate = $fecha instanceof DateTime ? $fecha : new DateTime($fecha);
     }
 
-    public function setReminderDate(?DateTime $reminderDate): void
+    public function setReminderDate(?DateTime $fecha): void
     {
-        $this->reminderDate = $reminderDate;
+        if (is_null($fecha)) {
+            $this->reminderDate = null;
+        } else {
+            $this->reminderDate = $fecha instanceof DateTime ? $fecha : new DateTime($fecha);
+        }
     }
 
     public function setComment(string $comment): void

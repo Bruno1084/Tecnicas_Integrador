@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/index.css">
-    <link rel="stylesheet" href="/css/subtareaTable.css">
+    <link rel="stylesheet" href="/css/ver_subtareaTable.css">
     <title>Manejador de Tareas</title>
 </head>
 
@@ -20,10 +20,10 @@
 
             <div class="options--container">
                 <div>
-                    <a href="/subtasks/crear">Añadir</a>
+                    <a href="/subtasks/update/<?= $subtask['id'] ?>">Editar</a>
                 </div>
                 <div>
-                    <a href="/subtasks/eliminar">Eliminar</a>
+                    <a href="/subtasks/delete/<?= $subtask['id'] ?>">Eliminar</a>
                 </div>
             </div>
 
@@ -43,7 +43,7 @@
                 </div>
 
                 <!-- Filas -->
-                <div class="tableSubtask--row" onclick="window.location='/subtasks/<?= $subtask['id'] ?>'">
+                <div class="tableSubtask--row">
                     <div><?= htmlspecialchars($subtask['id']) ?></div>
                     <div><?= htmlspecialchars($subtask['subject']) ?></div>
                     <div><?= htmlspecialchars($subtask['description']) ?></div>
@@ -53,10 +53,6 @@
                     <div><?= htmlspecialchars($subtask['expirationDate']) ?></div>
                     <div><?= htmlspecialchars($subtask['comment']) ?></div>
                     <div><?= htmlspecialchars($subtask['responsibleNickname']) ?></div>
-                    <div class="row--actions" onclick="event.stopPropagation()">
-                        <a href="/subtasks/editar/<?= $subtask['id'] ?>">✏️</a>
-                        <a href="/subtasks/eliminar/<?= $subtask['id'] ?>">❌</a>
-                    </div>
                 </div>
             </section>
         </section>

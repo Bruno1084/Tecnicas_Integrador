@@ -30,14 +30,6 @@
     width: 100%;
 }
 
-/* Table de Tarea */
-.tableTask--container {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    padding-bottom: 2rem;
-}
-
 /* Table de Subtarea */
 .tableSubtask--container {
     display: flex;
@@ -46,49 +38,22 @@
     padding-bottom: 2rem;
 }
 
-
-/* Cabecera de tabla Tarea */
-.tableTask--header {
-    display: grid;
-    grid-template-columns: 2rem repeat(7, 1fr);
-    background-color: #3f51b5;
-    color: white;
-    font-weight: bold;
-    padding: 0.75rem 1rem;
-    border-radius: 6px 6px 0 0;
-    font-size: 0.9rem;
-}
-
 /* Cabecera de tabla Subtarea */
 .tableSubtask--header {
     display: grid;
-    grid-template-columns: 2rem repeat(9, 1fr);
+    grid-template-columns: 2rem repeat(8, 1fr);
     background-color: #3f51b5;
     color: white;
     font-weight: bold;
     padding: 0.75rem 1rem;
     border-radius: 6px 6px 0 0;
     font-size: 0.9rem;
-}
-
-/* Filas de Tarea */
-.tableTask--row {
-    display: grid;
-    grid-template-columns: 2rem repeat(7, 1fr);
-    text-decoration: none;
-    color: inherit;
-    background-color: #fff;
-    padding: 0.75rem 1rem;
-    border-bottom: 1px solid #ddd;
-    transition: background-color 0.2s ease;
-    font-size: 0.9rem;
-    cursor: pointer;
 }
 
 /* Filas de Subtarea */
 .tableSubtask--row {
     display: grid;
-    grid-template-columns: 2rem repeat(9, 1fr);
+    grid-template-columns: 2rem repeat(8, 1fr);
     text-decoration: none;
     color: inherit;
     background-color: #fff;

@@ -20,10 +20,13 @@
 
             <div class="options--container">
                 <div>
-                    <a href="/tasks/crear">Añadir</a>
+                    <a href="/subtasks/create/<?= $task['id'] ?>">Añadir subtarea</a>
                 </div>
                 <div>
-                    <a href="/tasks/eliminar">Eliminar</a>
+                    <a href="/tasks/update/<?= $task['id'] ?>">Editar</a>
+                </div>
+                <div>
+                    <a href="/tasks/delete/<?= $task['id'] ?>">Eliminar</a>
                 </div>
             </div>
             
@@ -50,10 +53,6 @@
                     <div><?= htmlspecialchars($task['reminderDate']) ?></div>
                     <div><?= htmlspecialchars($task['expirationDate']) ?></div>
                     <div><?= htmlspecialchars($task['authorNickname']) ?></div>
-                    <div class="row--actions" onclick="event.stopPropagation()">
-                        <a href="/tasks/editar/<?= $task['id'] ?>">✏️</a>
-                        <a href="/tasks/eliminar/<?= $task['id'] ?>">❌</a>
-                    </div>
                 </div>
             </section>
 

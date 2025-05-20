@@ -22,67 +22,21 @@ class SubTaskController extends BaseController
     }
 
     // Create Routes
-    public function getCreate()
-    {
-        return view('subtask/crear_subtarea');
-    }
-
-    public function postCreate()
-    {
-        $subTaskModel = new SubTaskModel();
-
-        try {
-            $subTask = new SubTask(
-                0,
-                $this->request->getPost('subject'),
-                $this->request->getPost('description'),
-                $this->request->getPost('priority'),
-                $this->request->getPost('state'),
-                $this->request->getPost('expirationDate'),
-                $this->request->getPost('reminderDate'),
-                $this->request->getPost('comment'),
-                $this->request->getPost('idResponsible'),
-                $this->request->getPost('idTask')
-            );
-        } catch (InvalidArgumentException $e) {
-            return redirect()->back()->withInput()->with('error', $e->getMessage());
-        }
-
-        $data = [
-            'id' => $subTask->getId(),
-            'subject' => $subTask->getSubject(),
-            'description' => $subTask->getDescription(),
-            'priority' => $subTask->getPriority(),
-            'state' => $subTask->getState(),
-            'expirationDate' => $subTask->getExpirationDate(),
-            'reminderDate' => $subTask->getReminderDate(),
-            'comment' => $subTask->getComment(),
-            'idResponsible' => $subTask->getIdResponsible(),
-            'idTask' => $subTask->getIdTask(),
-        ];
-
-        if (!$subTaskModel->insert($data)) {
-            return redirect()->back()->withInput()->with('errors', $subTaskModel->errors());
-        }
-
-        return redirect()->to('/subtasks/' . $subTask->getIdTask())->with('message', 'Subtarea creada con éxito');
-    }
-
-
-    public function newSubTask($idTask)
+    public function getCreate($idTask)
     {
         $data = [
             'idTask' => $idTask
         ];
 
-        return view('/SubTasks/new_subtask', $data);
+        return view('subtasks/crear_subtarea', $data);
     }
 
-    public function create()
+    public function postCreate()
     {
-        $subTaskModel = new SubTaskModel();
         $session = session();
         $idAutor = $session->get('userId');
+
+        $subTaskModel = new SubTaskModel();
 
         // Pasar fechas del formulario a Datetime
         $expirationDate = new DateTime($this->request->getPost('expirationDate'));
@@ -104,12 +58,10 @@ class SubTaskController extends BaseController
                 $this->request->getPost('idTask')
             );
         } catch (InvalidArgumentException $e) {
-            // Hay un error con los inputs. Devolver errores de Type Task
             return redirect()->back()->withInput()->with('error', $e->getMessage());
         }
 
         $data = [
-            'id' => $subTask->getId(),
             'subject' => $subTask->getSubject(),
             'description' => $subTask->getDescription(),
             'priority' => $subTask->getPriority(),
@@ -121,14 +73,16 @@ class SubTaskController extends BaseController
             'idTask' => $subTask->getIdTask(),
         ];
 
-        if (!$subTaskModel->insert($data)) {
+        $newSubtaskId = $subTaskModel->insert($data);
+        if (!$newSubtaskId) {
             return redirect()->back()->withInput()->with('errors', $subTaskModel->errors());
         }
 
-        return redirect()->to('/tasks/' . $subTask->getIdTask() . '/subtasks')->with('message', 'Subtarea creada con éxito');
+        return redirect()->to('/subtasks/' . $newSubtaskId)->with('message', 'Subtarea creada con éxito');
     }
 
-    public function update($idSubTask)
+    // Edit Routes
+    public function getUpdate($idSubTask)
     {
         $subTaskModel = new SubTaskModel();
         $taskModel = new TaskModel();
@@ -192,5 +146,16 @@ class SubTaskController extends BaseController
         }
 
         return redirect()->to('tasks/' . $taskId . '/subtasks')->with('message', 'Subtarea actualizada con éxito');
+    }
+
+    public function postUpdate($idSubTask) {}
+
+    // Delete
+    public function getDelete($idSubTask)
+    {
+        $taskModel = new TaskModel();
+        $taskModel->delete($idSubTask);
+
+        return view('/tasks');
     }
 }

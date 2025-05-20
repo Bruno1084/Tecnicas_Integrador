@@ -100,7 +100,6 @@ class TaskController extends BaseController
         return $taskModel->findAll();
     }
 
-
     // Create Routes
     public function getCreate()
     {
@@ -153,11 +152,70 @@ class TaskController extends BaseController
         return redirect()->to('/tasks/' . $newTaskId)->with('message', 'Subtarea creada con éxito');
     }
 
-
     // Edit Routes
-    public function getEdit() {}
+    public function getUpdate($idTask)
+    {
+        $taskModel = new TaskModel();
+        $task = $taskModel->find($idTask);
+        $data = [
+            'task' => $task
+        ];
 
-    public function postEdit($idTask) {}
+        return view('/tasks/editar_tarea', $data);
+    }
+
+    public function postUpdate($idTask)
+    {
+        $taskModel = new TaskModel();
+        $oldTask = $taskModel->find($idTask);
+
+        // Pasar fechas del formulario a Datetime
+        $expirationDate = new DateTime($this->request->getPost('expirationDate'));
+        $reminderDate = $this->request->getPost('reminderDate')
+            ? new DateTime($this->request->getPost('reminderDate'))
+            : null;
+
+        try {
+            $task = new Task(
+                $idTask,
+                $this->request->getPost('subject'),
+                $this->request->getPost('description'),
+                $this->request->getPost('priority'),
+                $this->request->getPost('state'),
+                $expirationDate,
+                $reminderDate,
+                $oldTask['idAutor']
+            );
+        } catch (InvalidArgumentException $e) {
+            // Hay un error con los inputs. Devolver errores de Type Task
+            return redirect()->back()->withInput()->with('error', $e->getMessage());
+        }
+
+        $data = [
+            'subject' => $task->getSubject(),
+            'description' => $task->getDescription(),
+            'priority' => $task->getPriority(),
+            'state' => $task->getState(),
+            'expirationDate' => $task->getExpirationDate()->format('Y-m-d'),
+            'reminderDate' => $task->getReminderDate()?->format('Y-m-d'),
+            'idAutor' => $oldTask['idAutor'],
+        ];
+
+        if (!$taskModel->update($idTask, $data)) {
+            return redirect()->back()->withInput()->with('errors', $taskModel->errors());
+        }
+
+        return redirect()->to('/tasks/' . $idTask)->with('message', 'Tarea editada con éxito');
+    }
+
+    // Delete Routes
+    public function getDelete($idTask)
+    {
+        $taskModel = new TaskModel();
+        $taskModel->delete($idTask);
+
+        return view('/tasks/index');
+    }
 
 
 
@@ -248,117 +306,5 @@ class TaskController extends BaseController
         ]);
 
         return redirect()->back()->with('message', 'Tarea compartida con éxito.');
-    }
-
-    public function create()
-    {
-        $taskModel = new TaskModel();
-        $session = session();
-        $idAutor = $session->get('userId');
-
-        // Pasar fechas del formulario a Datetime
-        $expirationDate = new DateTime($this->request->getPost('expirationDate'));
-        $reminderDate = $this->request->getPost('reminderDate')
-            ? new DateTime($this->request->getPost('reminderDate'))
-            : null;
-
-        try {
-            $task = new Task(
-                0,
-                $this->request->getPost('subject'),
-                $this->request->getPost('description'),
-                $this->request->getPost('priority'),
-                'no iniciada',
-                $expirationDate,
-                $reminderDate,
-                $idAutor
-            );
-        } catch (InvalidArgumentException $e) {
-            // Hay un error con los inputs. Devolver errores de Type Task
-            return redirect()->back()->withInput()->with('error', $e->getMessage());
-        }
-
-        $data = [
-            'subject' => $task->getSubject(),
-            'description' => $task->getDescription(),
-            'priority' => $task->getPriority(),
-            'state' => $task->getState(),
-            'expirationDate' => $task->getExpirationDate()->format('Y-m-d'),
-            'reminderDate' => $task->getReminderDate()?->format('Y-m-d'),
-            'idAutor' => $task->getIdAutor(),
-        ];
-
-        if (!$taskModel->insert($data)) {
-            return redirect()->back()->withInput()->with('errors', $taskModel->errors());
-        }
-
-        return redirect()->to('/tasks')->with('message', 'Tarea creada con éxito');
-    }
-
-    public function update($idTask)
-    {
-        $taskModel = new TaskModel();
-        $session = session();
-        $idAutor = $session->get('userId');
-
-
-        // Pasar fechas del formulario a Datetime
-        $expirationDate = new DateTime($this->request->getPost('expirationDate'));
-        $reminderDate = $this->request->getPost('reminderDate')
-            ? new DateTime($this->request->getPost('reminderDate'))
-            : null;
-
-        try {
-            $task = new Task(
-                $idTask,
-                $this->request->getPost('subject'),
-                $this->request->getPost('description'),
-                $this->request->getPost('priority'),
-                $this->request->getPost('state'),
-                $expirationDate,
-                $reminderDate,
-                $idAutor
-            );
-        } catch (InvalidArgumentException $e) {
-            // Hay un error con los inputs. Devolver errores de Type Task
-            return redirect()->back()->withInput()->with('error', $e->getMessage());
-        }
-
-        $data = [
-            'subject' => $task->getSubject(),
-            'description' => $task->getDescription(),
-            'priority' => $task->getPriority(),
-            'state' => $task->getState(),
-            'expirationDate' => $task->getExpirationDate()->format('Y-m-d'),
-            'reminderDate' => $task->getReminderDate()?->format('Y-m-d'),
-            'idAutor' => $task->getIdAutor(),
-        ];
-
-        if (!$taskModel->update($task->getId(), $data)) {
-            return redirect()->back()->withInput()->with('errors', $taskModel->errors());
-        }
-
-        return redirect()->to('/tasks')->with('message', 'Tarea creada con éxito');
-    }
-
-    public function delete($id)
-    {
-        $taskModel = new TaskModel();
-        $session = session();
-        $userId = $session->get('userId');
-
-        $task = $taskModel->find($id);
-
-        if (!$task) {
-            return redirect()->back()->with('error', 'Tarea no encontrada.');
-        }
-
-        if ($task['idAutor'] != $userId) {
-            return redirect()->back()->with('error', 'No tienes permisos para eliminar esta tarea.');
-        }
-
-        $taskModel->update($id, ['active' => 0]);
-
-        return redirect()->to('/tasks')->with('message', 'Tarea eliminada con éxito.');
     }
 }

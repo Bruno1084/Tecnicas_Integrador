@@ -56,8 +56,8 @@
                             <div><?= htmlspecialchars($task['expirationDate']) ?></div>
                             <div><?= htmlspecialchars($userNickname) ?></div>
                             <div class="row--actions" onclick="event.stopPropagation()">
-                                <a href="/tasks/editar/<?= $task['id'] ?>">✏️</a>
-                                <a href="/tasks/eliminar/<?= $task['id'] ?>">❌</a>
+                                <a href="/tasks/update/<?= $task['id'] ?>">✏️</a>
+                                <a href="/tasks/delete/<?= $task['id'] ?>">❌</a>
                             </div>
                         </div>
                     <?php endforeach; ?>
