@@ -15,9 +15,9 @@ $routes->get('/log_out', 'Auth::logout');
 
 
 // User Routes
-$routes->get('/users/(:num)', 'UsersController::getOne/$1');
+$routes->get('/users/(:num)', 'UserController::getProfile/$1');
 // User Edit
-$routes->get('/users/(:num)', 'UserController::getUpdate/$1');
+$routes->post('/users/update/(:num)', 'UserController::postUpdate/$1');
 
 
 // Task Routes

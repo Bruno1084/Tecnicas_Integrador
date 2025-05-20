@@ -3,61 +3,54 @@
 namespace App\Controllers;
 
 use App\Models\UserModel;
+use App\Types\User;
+use InvalidArgumentException;
 use ReflectionException;
 
 class UserController extends BaseController
 {
-    public function getOneByNickname($nickname)
+    // Get Routes
+    public function getProfile($idUser)
     {
-        $session = session();
         $userModel = new UserModel();
-
-        $currentUser = $userModel->where('id', $session->get('userId'))->first();
-
-        if ($currentUser && $currentUser['nickname'] == $nickname) {
-            return view('Users/index', ['user' => $currentUser]);
-        }
-
-        //There is an error with the user
-        return redirect()->to('/log_out');
-    }
-
-    //This method is meant to be used to return the current logged user
-    public function getOneById()
-    {
-        $session = session();
-        $userId = $session->get('userId');
-        $userModel = new UserModel();
-
-        $currentUser = $userModel->where('id', $userId)->first();
-
-        if ($currentUser && $currentUser['id'] == $userId) {
-            return $currentUser;
-        }
-
-        //There is an error with the user
-        return redirect()->to('/log_out');
-    }
-
-    public function update()
-    {
-        $session = session();
-        $userId = $session->get('userId');
-        $userModel = new UserModel();
-
         $data = [
-            'name' => $this->request->getPost('name'),
-            'nickname' => $this->request->getPost('nickname'),
-            'email' => $this->request->getPost('email'),
-            'password' => $this->request->getPost('password'),
+            'user' => $userModel->find($idUser),
         ];
 
+        return view('/users/ver_usuario', $data);
+    }
+
+    // Update Routes
+    public function postUpdate($idUser)
+    {
+        $userModel = new UserModel();
+
         try {
-            if ($userModel->update($userId, $data)) {
-                return redirect()->to('/users/' . $data['nickname']);
-            }
-        } catch (ReflectionException $e) {
-            return redirect()->back()->with('error', 'Error al actualizar usuario: ' . $e->getMessage());
+            $user = new User(
+                $idUser,
+                $this->request->getPost('name'),
+                $this->request->getPost('nickname'),
+                $this->request->getPost('email'),
+                $this->request->getPost('password')
+            );
+        } catch (InvalidArgumentException $e) {
+            return redirect()->back()->withInput()->with('error', $e->getMessage());
         }
+
+        $data = [
+            'name' => $user->getName(),
+            'nickname' => $user->getNickname(),
+            'email' => $user->getEmail(),
+            'password' => $user->getPassword(),
+        ];
+
+        if (!$userModel->update($idUser, $data)) {
+            return redirect()->back()->withInput()->with('errors', $userModel->errors());
+        }
+
+        // Buscar los datos actualizados como array
+        $updatedUser = $userModel->find($idUser);
+
+        return view('/users/ver_usuario', ['user' => $updatedUser]);
     }
 }

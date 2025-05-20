@@ -29,7 +29,7 @@
                     <a href="/tasks/delete/<?= $task['id'] ?>">Eliminar</a>
                 </div>
             </div>
-            
+
             <section class="tableTask--container">
                 <!-- Cabecera -->
                 <div class="tableTask--header">
@@ -98,9 +98,6 @@
                     <?php endforeach; ?>
                 <?php endif; ?>
             </section>
-
-
-
         </section>
     </main>
 </body>

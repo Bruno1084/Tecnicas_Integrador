@@ -4,7 +4,11 @@
     </div>
     <div class="headerNav--container">
         <nav>
-            <a href="/profile">Perfil</a>
+            <?php
+            $session = session();
+            $userLogged = $session->get('userId')
+            ?>
+            <a href="/users/<?= $userLogged ?>">Perfil</a>
             <a href="/log_out">Cerrar Sesión</a>
         </nav>
     </div>
