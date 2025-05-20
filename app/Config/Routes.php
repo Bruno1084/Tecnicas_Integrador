@@ -15,8 +15,9 @@ $routes->get('/log_out', 'Auth::logout');
 
 
 // User Routes
-$routes->get('/users/(:segment)', 'UserController::getOneByNickname/$1');
-$routes->post('/users', 'UserController::update');
+$routes->get('/users/(:num)', 'UsersController::getOne/$1');
+// User Edit
+$routes->get('/users/(:num)', 'UserController::getUpdate/$1');
 
 
 // Task Routes
@@ -30,10 +31,6 @@ $routes->get('/tasks/update/(:num)', 'TaskController::getUpdate/$1');
 $routes->post('tasks/update/(:num)', 'TaskController::postUpdate/$1');
 // Task Delete
 $routes->get('/tasks/delete/(:num)', 'TaskController::getDelete/$1');
-
-// $routes->get('/shared_tasks', 'TaskController::sharedTasks'); // Returns shared tasks
-// $routes->post('/tasks/share_task/(:num)', 'TaskController::addShareTask/$1');
-// $routes->get('/tasks/share_task/(:num)', 'TaskController::shareTask/$1');
 
 
 // Subtask Routes

@@ -85,9 +85,18 @@ class SubTaskController extends BaseController
     public function getUpdate($idSubTask)
     {
         $subTaskModel = new SubTaskModel();
-        $taskModel = new TaskModel();
-        $session = session();
-        $idAutor = $session->get('userId');
+        $subtask = $subTaskModel->getSubtask($idSubTask);
+        $data = [
+            'subtask' => $subtask
+        ];
+
+        return view('/subtasks/editar_subtarea', $data);
+    }
+
+    public function postUpdate($idSubTask)
+    {
+        $subTaskModel = new SubTaskModel();
+        $oldSubtask = $subTaskModel->find($idSubTask);
 
         // Pasar fechas del formulario a Datetime
         $expirationDate = new DateTime($this->request->getPost('expirationDate'));
@@ -96,7 +105,7 @@ class SubTaskController extends BaseController
             : null;
 
         try {
-            $subTask = new SubTask(
+            $subtask = new SubTask(
                 $idSubTask,
                 $this->request->getPost('subject'),
                 $this->request->getPost('description'),
@@ -105,57 +114,39 @@ class SubTaskController extends BaseController
                 $expirationDate,
                 $reminderDate,
                 $this->request->getPost('comment'),
-                $idAutor,
-                $this->request->getPost('idTask')
+                $oldSubtask['idResponsible'],
+                $oldSubtask['idTask']
             );
         } catch (InvalidArgumentException $e) {
+            // Hay un error con los inputs. Devolver errores de Type Task
             return redirect()->back()->withInput()->with('error', $e->getMessage());
         }
 
         $data = [
-            'id' => $subTask->getId(),
-            'subject' => $subTask->getSubject(),
-            'description' => $subTask->getDescription(),
-            'priority' => $subTask->getPriority(),
-            'state' => $subTask->getState(),
-            'expirationDate' => $subTask->getExpirationDate()->format('Y-m-d'),
-            'reminderDate' => $subTask->getReminderDate()?->format('Y-m-d'),
-            'comment' => $subTask->getComment(),
-            'idResponsible' => $subTask->getIdResponsible(),
-            'idTask' => $subTask->getIdTask(),
+            'subject' => $subtask->getSubject(),
+            'description' => $subtask->getDescription(),
+            'priority' => $subtask->getPriority(),
+            'state' => $subtask->getState(),
+            'expirationDate' => $subtask->getExpirationDate()->format('Y-m-d'),
+            'reminderDate' => $subtask->getReminderDate()?->format('Y-m-d'),
+            'comment' => $subtask->getComment(),
+            'idResponsible' => $oldSubtask['idResponsible'],
+            'idTask' => $oldSubtask['idTask'],
         ];
 
-        if (!$subTaskModel->update($subTask->getId(), $data)) {
+        if (!$subTaskModel->update($idSubTask, $data)) {
             return redirect()->back()->withInput()->with('errors', $subTaskModel->errors());
         }
 
-        // Verificar el estado de las subtareas para actualizar la tarea
-        $taskId = $subTask->getIdTask();
-        $allCompleted = $subTaskModel
-            ->where('idTask', $taskId)
-            ->where('state !=', 'completada')
-            ->countAllResults() === 0;
-
-        if ($allCompleted) {
-            $taskModel->update($taskId, ['state' => 'completada']);
-        } else {
-            $task = $taskModel->find($taskId);
-            if ($task['state'] === 'no iniciada' && in_array($subTask->getState(), ['en proceso', 'completada'])) {
-                $taskModel->update($taskId, ['state' => 'en proceso']);
-            }
-        }
-
-        return redirect()->to('tasks/' . $taskId . '/subtasks')->with('message', 'Subtarea actualizada con éxito');
+        return redirect()->to('/subtasks/' . $oldSubtask['id'])->with('message', 'Subtarea editada con éxito');
     }
-
-    public function postUpdate($idSubTask) {}
 
     // Delete
     public function getDelete($idSubTask)
     {
-        $taskModel = new TaskModel();
-        $taskModel->delete($idSubTask);
+        $subTaskModel = new SubTaskModel();
+        $subTaskModel->delete($idSubTask);
 
-        return view('/tasks');
+        return view('/tasks/index');
     }
 }
