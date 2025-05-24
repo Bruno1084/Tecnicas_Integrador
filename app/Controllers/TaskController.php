@@ -17,8 +17,8 @@ class TaskController extends BaseController
         $session = session();
         $userId = $session->get('userId');
 
-        $userModel = new UserModel();
-        $user = $userModel->find($userId);
+        $taskModel = new TaskModel();
+        $tasks = $taskModel->getAllActive($userId);
 
         $filters = [
             'userId' => $userId,
@@ -26,12 +26,10 @@ class TaskController extends BaseController
             'priority' => $this->request->getGet('priority'),
             'expirationDate' => $this->request->getGet('expirationDate'),
             'state' => $this->request->getGet('state'),
-            'excludeSharedByUser' => true,
             'active' => true,
         ];
 
-        $data['tasks'] = $this->getFiltered($filters);
-        $data['userNickname'] = $user['nickname'];
+        $data['tasks'] = $this->getFiltered($tasks, $filters);
 
         return view('tasks/index', $data);
     }
@@ -49,56 +47,50 @@ class TaskController extends BaseController
         return view('/tasks/ver_tarea', $data);
     }
 
-    public function getFiltered($filters = [])
+    public function getFiltered($tasks, $filters = [])
     {
-        $taskModel = new TaskModel();
-
         if (!isset($filters['userId'])) {
             return [];
         }
 
-        $taskModel->where('idAutor', $filters['userId']);
-
-        // Filtrado por tareas activas/inactivas
-        if (!isset($filters['active']) || $filters['active'] === true) {
-            $taskModel->where('active', 1);
-        } else {
-            $taskModel->where('active', 0);
-        }
-
-        // Excluir tareas compartidas por el usuario
-        if (!empty($filters['excludeSharedByUser'])) {
-            $taskCollaboratorModel = new TaskCollaboratorModel();
-            $sharedTaskIdsByUser = $taskCollaboratorModel
-                ->select('idTask')
-                ->join('tasks', 'tasks.id = task_collaborators.idTask')
-                ->where('tasks.idAutor', $filters['userId'])
-                ->findColumn('idTask');
-
-            if (!empty($sharedTaskIdsByUser)) {
-                $taskModel->whereNotIn('id', $sharedTaskIdsByUser);
+        return array_values(array_filter($tasks, function ($task) use ($filters) {
+            // Solo tareas del autor
+            if ($task['idAutor'] != $filters['userId']) {
+                return false;
             }
-        }
 
-        // Filtros adicionales
-        if (!empty($filters['subject'])) {
-            $taskModel->like('subject', $filters['subject']);
-        }
+            // Filtrado por estado activo/inactivo
+            if (isset($filters['active'])) {
+                $isActive = $filters['active'] ? 1 : 0;
+                if ($task['active'] != $isActive) {
+                    return false;
+                }
+            }
 
-        if (!empty($filters['priority'])) {
-            $taskModel->where('priority', $filters['priority']);
-        }
+            // Filtro por asunto
+            if (!empty($filters['subject']) && stripos($task['subject'], $filters['subject']) === false) {
+                return false;
+            }
 
-        if (!empty($filters['state'])) {
-            $taskModel->where('state', $filters['state']);
-        }
+            // Filtro por prioridad
+            if (!empty($filters['priority']) && $task['priority'] != $filters['priority']) {
+                return false;
+            }
 
-        if (!empty($filters['expirationDate'])) {
-            $taskModel->where('expirationDate', $filters['expirationDate']);
-        }
+            // Filtro por estado
+            if (!empty($filters['state']) && $task['state'] != $filters['state']) {
+                return false;
+            }
 
-        return $taskModel->findAll();
+            // Filtro por fecha de vencimiento
+            if (!empty($filters['expirationDate']) && $task['expirationDate'] != $filters['expirationDate']) {
+                return false;
+            }
+
+            return true;
+        }));
     }
+
 
     // Create Routes
     public function getCreate()
@@ -214,97 +206,17 @@ class TaskController extends BaseController
         $taskModel = new TaskModel();
         $taskModel->delete($idTask);
 
-        return view('/tasks/index');
+        return redirect()->to('/tasks');
     }
 
-
-
-    public function shareTask($idTask)
+    // Share Routes
+    public function getShare()
     {
-        $taskModel = new TaskModel();
-        $task = $taskModel->find($idTask);
-
-        if (!$task) {
-            return redirect()->to('/tasks')->with('error', 'Tarea no encontrada.');
-        }
-
-        return view('/Tasks/share_task', ['task' => $task]);
+        return view('/tasks/compartir_tarea');
     }
 
-    public function sharedTasks()
+    public function postShare()
     {
-        $session = session();
-        $userId = $session->get('userId');
-
-        $taskCollaboratorModel = new TaskCollaboratorModel();
-        $taskModel = new TaskModel();
-
-        // 1. Tareas compartidas CON el usuario (colaborador)
-        $sharedTaskIdsByUser = $taskCollaboratorModel
-            ->where('idUser', $userId)
-            ->select('idTask')
-            ->findColumn('idTask');
-
-        // 2. Tareas creadas por el usuario que tienen colaboradores
-        $sharedTaskIdsByAuthor = $taskCollaboratorModel
-            ->select('idTask')
-            ->join('tasks', 'tasks.id = task_collaborators.idTask')
-            ->where('tasks.idAutor', $userId)
-            ->groupBy('idTask')
-            ->findColumn('idTask');
-
-        // Combinar IDs sin duplicados
-        $allSharedTaskIds = array_unique(array_merge($sharedTaskIdsByUser, $sharedTaskIdsByAuthor));
-
-        if (empty($allSharedTaskIds)) {
-            return view('/Tasks/shared_tasks', [
-                'sharedTasks' => [],
-                'userNickname' => 'Colaborador'
-            ]);
-        }
-
-        // Obtener tareas con nickname del autor
-        $sharedTasks = $taskModel
-            ->select('tasks.*, users.nickname as authorNickname')
-            ->join('users', 'tasks.idAutor = users.id')
-            ->whereIn('tasks.id', $allSharedTaskIds)
-            ->asArray()
-            ->findAll();
-
-        return view('/Tasks/shared_tasks', [
-            'sharedTasks' => $sharedTasks,
-            'userNickname' => 'Colaborador'
-        ]);
-    }
-
-    public function addShareTask($idTask)
-    {
-        $email = $this->request->getPost('email');
-        $userModel = new UserModel();
-        $taskCollaboratorModel = new TaskCollaboratorModel();
-
-        $user = $userModel->where('email', $email)->first();
-
-        if (!$user) {
-            return redirect()->back()->with('error', 'No se encontró un usuario con ese correo.');
-        }
-
-        // Verificar si ya es colaborador
-        $exists = $taskCollaboratorModel
-            ->where('idTask', $idTask)
-            ->where('idUser', $user['id'])
-            ->first();
-
-        if ($exists) {
-            return redirect()->back()->with('error', 'Este usuario ya es colaborador de la tarea.');
-        }
-
-        // Insertar colaboración
-        $taskCollaboratorModel->insert([
-            'idTask' => $idTask,
-            'idUser' => $user['id'],
-        ]);
-
-        return redirect()->back()->with('message', 'Tarea compartida con éxito.');
+        
     }
 }

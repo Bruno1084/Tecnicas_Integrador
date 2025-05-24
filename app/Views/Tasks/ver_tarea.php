@@ -91,8 +91,8 @@
                             <div><?= htmlspecialchars($subtask['comment']) ?></div>
                             <div><?= htmlspecialchars($subtask['responsibleNickname']) ?></div>
                             <div class="row--actions" onclick="event.stopPropagation()">
-                                <a href="/subtasks/editar/<?= $subtask['id'] ?>">✏️</a>
-                                <a href="/subtasks/eliminar/<?= $subtask['id'] ?>">❌</a>
+                                <a href="/subtasks/update/<?= $subtask['id'] ?>">✏️</a>
+                                <a href="/subtasks/delete/<?= $subtask['id'] ?>">❌</a>
                             </div>
                         </div>
                     <?php endforeach; ?>

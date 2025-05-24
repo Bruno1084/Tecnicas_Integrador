@@ -21,6 +21,7 @@ class SubTaskController extends BaseController
         return view('subtasks/ver_subtarea', $data);
     }
 
+
     // Create Routes
     public function getCreate($idTask)
     {
@@ -78,8 +79,9 @@ class SubTaskController extends BaseController
             return redirect()->back()->withInput()->with('errors', $subTaskModel->errors());
         }
 
-        return redirect()->to('/subtasks/' . $newSubtaskId)->with('message', 'Subtarea creada con éxito');
+        return redirect()->to('/tasks/' . $newSubtaskId)->with('message', 'Subtarea creada con éxito');
     }
+
 
     // Edit Routes
     public function getUpdate($idSubTask)
@@ -138,8 +140,9 @@ class SubTaskController extends BaseController
             return redirect()->back()->withInput()->with('errors', $subTaskModel->errors());
         }
 
-        return redirect()->to('/subtasks/' . $oldSubtask['id'])->with('message', 'Subtarea editada con éxito');
+        return redirect()->to('/tasks/' . $oldSubtask['idTask'])->with('message', 'Subtarea editada con éxito');
     }
+
 
     // Delete
     public function getDelete($idSubTask)
@@ -147,6 +150,6 @@ class SubTaskController extends BaseController
         $subTaskModel = new SubTaskModel();
         $subTaskModel->delete($idSubTask);
 
-        return view('/tasks/index');
+        return redirect()->to('/tasks');
     }
 }

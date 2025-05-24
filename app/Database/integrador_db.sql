@@ -21,6 +21,7 @@ create table tasks(
     reminderDate Date,
     expirationDate Date not null,
     idAutor int not null,
+    active boolean not null default true,
     primary key (id),
     foreign key (idAutor) references users(id) 
     on delete cascade 
@@ -37,6 +38,7 @@ create table subtasks(
     comment varchar(500),
     idResponsible int,
     idTask int not null,
+    active boolean not null default true,
     primary key(id),
 	FOREIGN KEY (idResponsible) REFERENCES users(id)
 		ON DELETE SET NULL,

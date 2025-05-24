@@ -22,6 +22,9 @@
                 <div>
                     <a href="/tasks/create">Añadir</a>
                 </div>
+                <div>
+                    <a href="/tasks/share">Compartir Tarea</a>
+                </div>
             </div>
 
             <?= view('Layout/TaskFilter') ?>
@@ -54,7 +57,7 @@
                             <div><?= htmlspecialchars($task['state']) ?></div>
                             <div><?= htmlspecialchars($task['reminderDate']) ?></div>
                             <div><?= htmlspecialchars($task['expirationDate']) ?></div>
-                            <div><?= htmlspecialchars($userNickname) ?></div>
+                            <div><?= htmlspecialchars($task['authorNickname']) ?></div>
                             <div class="row--actions" onclick="event.stopPropagation()">
                                 <a href="/tasks/update/<?= $task['id'] ?>">✏️</a>
                                 <a href="/tasks/delete/<?= $task['id'] ?>">❌</a>

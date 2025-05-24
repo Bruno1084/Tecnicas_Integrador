@@ -14,7 +14,7 @@ class SubTask
     private string $state;
     private DateTime $expirationDate;
     private ?DateTime $reminderDate;
-    private string $comment;
+    private ?string $comment;
     private int $idResponsible;
     private int $idTask;
 

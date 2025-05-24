@@ -16,7 +16,8 @@ class TaskModel extends Model
         'state',
         'reminderDate',
         'expirationDate',
-        'idAutor'
+        'idAutor',
+        'active'
     ];
 
     /* Obtiene una tarea por ID, incluyendo datos del autor. */
@@ -30,14 +31,18 @@ class TaskModel extends Model
             ->getRowArray();
     }
 
-    /**
-     * Devuelve todas las tareas activas.
-     * Si no tenés un campo "active", podés eliminar este método o adaptarlo.
-     */
-    public function getAllActive()
+    /* Retorna todas las tareas donde participa un autor o es autor. */
+    public function getAllActive($idAutor)
     {
-        return $this->where('active', 1)->findAll(); // Solo si tenés el campo 'active'
+        return $this->db->table('tasks t')
+            ->select('t.*, u.nickname as authorNickname')
+            ->join('users u', 't.idAutor = u.id', 'left')
+            ->where('u.id', $idAutor)
+            ->where('t.active', true)
+            ->get()
+            ->getResultArray();
     }
+
 
     /* Retorna todas las subtareas de una tarea específica. */
     public function getAllSubtasksFromTask(int $idTask)
