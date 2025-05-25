@@ -212,11 +212,35 @@ class TaskController extends BaseController
     // Share Routes
     public function getShare()
     {
-        return view('/tasks/compartir_tarea');
+        $session = session();
+        $idUser = $session->get('userId');
+        $taskModel = new TaskModel();
+        $data = [
+            'tasks' => $taskModel->getAllActive($idUser),
+
+        ];
+
+        return view('/tasks/compartir_tarea', $data);
     }
 
     public function postShare()
     {
-        
+        $userModel = new UserModel();
+        $taskCollaboratorModel = new TaskCollaboratorModel();
+
+        // User email is unique in the database.
+        $user = $userModel->where('email', $this->request->getPost('userEmail'));
+
+        $data = [
+            'idUser' => $user['id'],
+            'idTask' => $this->request->getPost('idTask'),
+        ];
+
+        $newTaskCollaboratorId = $taskCollaboratorModel->insert($data);
+        if (!$newTaskCollaboratorId) {
+            return redirect()->back()->withInput()->with('errors', $taskCollaboratorModel->errors());
+        }
+
+        return redirect()->to('/tasks/' . $this->request->getPost('idTask'))->with('message', 'Tarea compartida con éxito.');
     }
 }

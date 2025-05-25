@@ -27,32 +27,28 @@
                     <?= csrf_field() ?>
 
                     <div class="form-group">
-                        <label for="subject">Título</label>
-                        <input type="text" id="subject" name="subject" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="description">Descripción</label>
-                        <input type="text" id="description" name="description" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="priority">Prioridad</label>
-                        <select name="priority" id="priority" required>
-                            <option value="alta">Alta</option>
-                            <option value="media">Media</option>
-                            <option value="baja">Baja</option>
+                        <label for="idTask">Seleccionar Tarea:</label>
+                        <select name="idTask" id="idTask" required>
+                            <option value="">-- Elegir Tarea --</option>
+                            <?php foreach ($tasks as $task): ?>
+                                <option value="<?= esc($task['id']) ?>">
+                                    <?= esc($task['subject']) ?>
+                                </option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
 
                     <div class="form-group">
-                        <label for="expirationDate">Fecha de Vencimiento</label>
-                        <input type="date" name="expirationDate" id="expirationDate" required>
+                        <label for="userEmail">Invitar a Usuario:</label>
+                        <input type="email" name="userEmail" id="userEmail" placeholder="usuario@email.com" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="reminderDate">Fecha de Recordatorio</label>
-                        <input type="date" name="reminderDate" id="reminderDate">
+                        <label for="priority">Puede Editar</label>
+                        <select name="priority" id="priority" required>
+                            <option value="false">No</option>
+                            <option value="true">Si</option>
+                        </select>
                     </div>
 
                     <div class="form-actions">
