@@ -34,6 +34,8 @@ $routes->get('/tasks/delete/(:num)', 'TaskController::getDelete/$1');
 // Task Share
 $routes->get('/tasks/share', 'TaskController::getShare');
 $routes->post('/tasks/share', 'TaskController::postShare');
+// Shared Task
+$routes->get('/tasks/shared', 'TaskController::getSharedTasks');
 
 
 // Subtask Routes

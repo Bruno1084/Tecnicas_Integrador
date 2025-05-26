@@ -144,6 +144,7 @@ class TaskController extends BaseController
         return redirect()->to('/tasks/' . $newTaskId)->with('message', 'Subtarea creada con éxito');
     }
 
+
     // Edit Routes
     public function getUpdate($idTask)
     {
@@ -200,6 +201,7 @@ class TaskController extends BaseController
         return redirect()->to('/tasks/' . $idTask)->with('message', 'Tarea editada con éxito');
     }
 
+
     // Delete Routes
     public function getDelete($idTask)
     {
@@ -208,6 +210,7 @@ class TaskController extends BaseController
 
         return redirect()->to('/tasks');
     }
+
 
     // Share Routes
     public function getShare()
@@ -229,7 +232,7 @@ class TaskController extends BaseController
         $taskCollaboratorModel = new TaskCollaboratorModel();
 
         // User email is unique in the database.
-        $user = $userModel->where('email', $this->request->getPost('userEmail'));
+        $user = $userModel->where('email', $this->request->getPost('userEmail'))->first();
 
         $data = [
             'idUser' => $user['id'],
@@ -242,5 +245,22 @@ class TaskController extends BaseController
         }
 
         return redirect()->to('/tasks/' . $this->request->getPost('idTask'))->with('message', 'Tarea compartida con éxito.');
+    }
+
+
+    // Shared Tasks Routes
+    public function getSharedTasks()
+    {
+        $session = session();
+        $idUser = $session->get('userId');
+
+        $taskModel = new TaskModel();
+        $data = [
+            'sharedTasks' => $taskModel->getTasksByParticipant($idUser),
+        ];
+
+        return view('/tasks/tareas_compartidas', $data);
+
+
     }
 }

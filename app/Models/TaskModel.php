@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use CodeIgniter\Database\BaseBuilder;
 use CodeIgniter\Model;
 
 class TaskModel extends Model
@@ -31,7 +32,7 @@ class TaskModel extends Model
             ->getRowArray();
     }
 
-    /* Retorna todas las tareas donde participa un autor o es autor. */
+    /* Retorna todas las tareas donde el usuario es autor. */
     public function getAllActive($idAutor)
     {
         return $this->db->table('tasks t')
@@ -43,6 +44,19 @@ class TaskModel extends Model
             ->getResultArray();
     }
 
+    /* Retorna todas las tareas donde el usuario es asignado como colaborador. */
+    public function getTasksByParticipant($idUser)
+    {
+        return $this->db->table('tasks t')
+            ->select('t.*, u.nickname as authorNickname, tc.canEdit')
+            ->join('users u', 't.idAutor = u.id', 'left')
+            ->join('task_collaborators tc', 'tc.idTask = t.id')
+            ->where('tc.idUser', $idUser)
+            ->where('t.idAutor !=', $idUser)
+            ->where('t.active', true)
+            ->get()
+            ->getResultArray();
+    }
 
     /* Retorna todas las subtareas de una tarea específica. */
     public function getAllSubtasksFromTask(int $idTask)

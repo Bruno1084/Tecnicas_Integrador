@@ -2,7 +2,7 @@
     <div>
         <div>
             <a href="/tasks">Tareas</a>
-            <a href="/sharedTaks">Tareas Compartidas</a>
+            <a href="/tasks/shared">Tareas Compartidas</a>
         </div>
     </div>
 </section>
